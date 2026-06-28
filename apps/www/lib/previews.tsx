@@ -14,12 +14,7 @@
  * registering their use cases below.)
  */
 import { AsyncButton } from '@/registry-preview/async-button';
-import {
-  AnimatePresence,
-  motion,
-  useAnimationControls,
-  useReducedMotion,
-} from 'framer-motion';
+import { AnimatePresence, motion, useAnimationControls, useReducedMotion } from 'framer-motion';
 import * as React from 'react';
 
 export interface UseCase {
