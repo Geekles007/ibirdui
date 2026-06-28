@@ -1,5 +1,6 @@
 'use client';
 
+import { previews } from '@/lib/previews';
 import { type Comp, components, docs, firstComponent, layerNames, pages } from '@/lib/site-data';
 import { s } from '@/lib/style';
 import Link from 'next/link';
@@ -99,6 +100,22 @@ const ShieldSvg = ({ size = 11 }: { size?: number }) => (
     <path d="M9 12l2 2 4-4" />
   </svg>
 );
+const ReplaySvg = ({ size = 13 }: { size?: number }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2.2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden="true"
+  >
+    <path d="M3 12a9 9 0 1 0 3-6.7L3 8" />
+    <path d="M3 3v5h5" />
+  </svg>
+);
 
 export default function ComponentsPage() {
   const router = useRouter();
@@ -111,6 +128,10 @@ export default function ComponentsPage() {
   const [selected, setSelected] = useState('data-list');
   const [sideQuery, setSideQuery] = useState('');
   const [demoState, setDemoState] = useState<DemoState>('success');
+  const [caseIdx, setCaseIdx] = useState(0);
+  // Bumped by the Replay button to remount the live demo (resets its state and
+  // replays the entrance animation).
+  const [replayNonce, setReplayNonce] = useState(0);
   const [asVariant, setAsVariant] = useState<AsVariant>('success');
   const [paletteOpen, setPaletteOpen] = useState(false);
   const [paletteQuery, setPaletteQuery] = useState('');
@@ -122,6 +143,8 @@ export default function ComponentsPage() {
   const select = useCallback((name: string) => {
     const meta = components.find((c) => c.name === name);
     setSelected(name);
+    setCaseIdx(0);
+    setReplayNonce(0);
     setAnnounce(`Viewing ${name} documentation`);
     if (meta && meta.status === 'done') {
       setDemoState('success');
@@ -270,6 +293,9 @@ export default function ComponentsPage() {
   const install = `npx ibirdui add ${meta.name}`;
   const exAsyncState = !planned && d.example === 'asyncstate';
   const exInteractive = !planned && d.example === 'interactive';
+  // Live, interactive use-case previews that mount the real component.
+  const cases = !planned ? previews[meta.name] : undefined;
+  const activeCase = cases?.[Math.min(caseIdx, cases.length - 1)];
   const hasTutorial = !planned && !!d.tutorial;
   const hasProps = !planned && !!d.props;
   const hasA11y = !planned && meta.a11y && !!d.a11yList;
@@ -1008,6 +1034,98 @@ export default function ComponentsPage() {
                 </div>
               )}
             </section>
+
+            {/* USE CASES — live, interactive previews of the real component */}
+            {activeCase && cases && (
+              <section aria-labelledby="uc-h" style={s('margin-bottom:44px')}>
+                <h2
+                  id="uc-h"
+                  style={s(
+                    "font-size:13px;font-family:'Geist Mono',monospace;letter-spacing:.07em;text-transform:uppercase;color:var(--accent-fg);margin:0 0 16px",
+                  )}
+                >
+                  Use cases · try it
+                </h2>
+
+                <div
+                  role="group"
+                  aria-label="Choose a use case"
+                  style={s('display:flex;flex-wrap:wrap;gap:7px;margin-bottom:16px')}
+                >
+                  {cases.map((c, i) => (
+                    <button
+                      key={c.id}
+                      type="button"
+                      aria-pressed={caseIdx === i}
+                      onClick={() => setCaseIdx(i)}
+                      style={pill(caseIdx === i)}
+                    >
+                      {c.title}
+                    </button>
+                  ))}
+                </div>
+
+                <p style={s('font-size:14px;color:var(--muted);margin:0 0 16px;line-height:1.6')}>
+                  {activeCase.blurb}
+                </p>
+
+                {/* Live demo — mounts the real component on a playground stage.
+                    Everything inside .ibird-preview speaks the shadcn channel
+                    tokens (hsl(var(--…))), so it must NOT use the docs colour
+                    variables. The demo remounts (and re-animates) on a new use
+                    case or on Replay via its key. */}
+                <div className="ibird-preview" style={s('margin-bottom:14px')}>
+                  <div className="ibird-stage">
+                    <button
+                      type="button"
+                      className="ibird-replay"
+                      onClick={() => setReplayNonce((n) => n + 1)}
+                      aria-label="Replay this demo"
+                    >
+                      <ReplaySvg />
+                      Replay
+                    </button>
+                    <div
+                      key={`${meta.name}-${activeCase.id}-${replayNonce}`}
+                      className="ibird-demo"
+                    >
+                      <activeCase.Demo />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Source for this use case */}
+                <div
+                  style={s(
+                    'position:relative;background:#0c0d10;border:1px solid #20232a;border-radius:12px;overflow:hidden',
+                  )}
+                >
+                  <div
+                    style={s(
+                      'display:flex;align-items:center;justify-content:space-between;padding:9px 14px;border-bottom:1px solid #1c1f25',
+                    )}
+                  >
+                    <span style={s(monoMuted2)}>{meta.name}.tsx</span>
+                    <button
+                      type="button"
+                      onClick={() => copy(activeCase.code, `case-${meta.name}-${activeCase.id}`)}
+                      aria-label="Copy code"
+                      className="hov-fg"
+                      style={s(
+                        'color:#8b949e;background:transparent;border:none;cursor:pointer;display:inline-flex',
+                      )}
+                    >
+                      {copiedId === `case-${meta.name}-${activeCase.id}` ? (
+                        <CheckSvg size={15} stroke="#b6ff2e" />
+                      ) : (
+                        <CopySvg />
+                      )}
+                    </button>
+                  </div>
+                  <pre style={s(preStyle)}>{activeCase.code}</pre>
+                </div>
+              </section>
+            )}
 
             {/* TUTORIAL */}
             {hasTutorial && (

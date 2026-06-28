@@ -58,9 +58,10 @@ Styling is **Tailwind CSS** (semantic tokens: `muted`, `destructive`, …).
 
 ```
 packages/core      AsyncState contract · content hashing · zod schema + fetch helpers
-packages/cli       add · upgrade · gen · list  (writes/maintains ibirdui.lock.json)
+packages/cli       add · doctor · upgrade · gen · list  (writes/maintains ibirdui.lock.json)
+packages/mcp       MCP server (ibirdui-mcp): search/read the registry from AI assistants
 registry/          Items (async-state, state-boundary, data-list) + a11y tests + build
-apps/www           Next.js docs site; also serves the static registry under /r
+apps/www           Next.js docs site (/tools documents the CLI + MCP); serves the registry under /r
 scripts/rename.mjs One-shot rebrand for a fork
 ```
 
@@ -96,8 +97,14 @@ CLI="$(pwd)/packages/cli/dist/index.js"
 node "$CLI" list    --registry "$REG"
 node "$CLI" gen     "a list of users with loading states" --registry "$REG"
 node "$CLI" add     data-list --registry "$REG" --cwd /tmp/app   # also writes ibirdui.lock.json
+node "$CLI" doctor  --registry "$REG" --cwd /tmp/app   # read-only: local edits, missing files, updates
 node "$CLI" upgrade --registry "$REG" --cwd /tmp/app
 ```
+
+`ibirdui doctor` is the read-only counterpart to `upgrade`: it diffs each installed
+file against the hash recorded in `ibirdui.lock.json` to flag bricks you've edited
+locally or that have gone missing, and checks the registry for newer versions
+(`--offline` skips that). It writes nothing — just tells you what `upgrade` would touch.
 
 The default registry URL is GitHub Pages; `--registry` / `IBIRDUI_REGISTRY_URL`
 override it.

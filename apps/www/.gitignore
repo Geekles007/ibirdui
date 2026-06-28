@@ -1,0 +1,3 @@
+# Real registry component sources, synced in by scripts/copy-registry.mjs
+# before dev/build so live previews mount the actual components. Generated.
+/registry-preview/

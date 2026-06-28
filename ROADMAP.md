@@ -120,9 +120,10 @@ Légende : ✅ fait · 🔜 prochain · ⬜ à venir
 
 ## Axe DX & IA (transversal — pas une couche de composants)
 
-- **Serveur MCP** exposant le registry aux assistants (le `manifest.json` `intents` + `examples` devient un outil que les LLM interrogent pour assembler une UI à partir de vrais composants).
-- **`ibirdui doctor` / `ibirdui upgrade`** : diff via les hashes déjà calculés au build, pour détecter les briques modifiées localement et proposer la mise à jour.
-- **Playground dark-mode** dans le site, pour essayer chaque brique en direct.
+- **Serveur MCP** ✅ (`packages/mcp`, publié `ibirdui-mcp`) : expose le registry aux assistants via le Model Context Protocol. Trois outils — `search_components` (classe le catalogue contre un besoin en langage naturel), `get_component` (détails + **vrai code source** d'une brique), `list_components` (catalogue, filtrable par état async). L'IA compose avec de vrais composants au lieu d'inventer du markup.
+- **`ibirdui upgrade`** ✅ : mise à jour 3-way (untouched → màj, édité → conflit `.new`). **`ibirdui doctor`** ✅ : bilan en lecture seule — diff via les hashes du lockfile pour repérer les briques modifiées localement ou manquantes, et signale les mises à jour disponibles (`--offline` pour rester hors-ligne).
+- **Playground dark-mode** dans le site (`/components`, section « Use cases · try it ») : chaque use case monte le **vrai** composant sur une scène animée. Couvert : `async-button`, `accordion`, `tabs` + toute la famille overlays de la Couche 8 (`tooltip`, `popover`, `dropdown-menu`, `stepper`). 🔜 Reste : les briques à dépendances croisées et les portails plein écran (`toast`, `confirm-dialog`).
+- **Page `/tools`** ✅ : documente le CLI (`add` · `doctor` · `upgrade` · `gen` · `list`) et le serveur MCP, avec sorties terminal et commandes copiables.
 
 ## Idées à explorer (non encore planifiées)
 
@@ -143,9 +144,11 @@ Légende : ✅ fait · 🔜 prochain · ⬜ à venir
 Chaque brique livrée embarque un **test d'accessibilité** (axe) et une **fiche
 lisible par l'IA** (pour `ibirdui gen`).
 
-**Prochaines priorités :** Couches 8 (Overlays & menus) et 9 (Hooks utilitaires)
-✅ livrées — toutes les couches de composants (0→9) sont complètes. Prochain
-chantier : l'**axe DX & IA** (serveur MCP, `ibirdui doctor` / `upgrade`,
-playground dark-mode), qui ne produit pas de briques mais de l'outillage.
+**Prochaines priorités :** toutes les couches de composants (0→9) sont complètes.
+L'**axe DX & IA** est désormais bien avancé : `ibirdui upgrade` + `ibirdui doctor`
+(outillage edit-aware), le **serveur MCP** (`ibirdui-mcp`) et la page **`/tools`**
+sont livrés ; le **playground** couvre les overlays de la Couche 8. Reste à
+étendre le playground aux briques à dépendances croisées et aux portails.
 
-**Total : 46 briques livrées 🎉 · Couches 0→9 complètes · reste l'axe DX/IA.**
+**Total : 46 briques livrées 🎉 · Couches 0→9 complètes · axe DX/IA : MCP +
+doctor/upgrade + playground (overlays) livrés.**
