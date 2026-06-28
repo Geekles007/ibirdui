@@ -431,6 +431,7 @@ export default function ComponentsPage() {
             </Link>
             <Link
               href="/tools"
+              className="hov-surface"
               style={s('padding:7px 11px;border-radius:7px;font-size:14px;color:var(--muted)')}
             >
               Tools
