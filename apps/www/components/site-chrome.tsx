@@ -9,6 +9,7 @@ import { type ReactNode, useEffect, useRef, useState } from 'react';
 const navItems = [
   { label: 'Home', href: '/' },
   { label: 'Components', href: '/components' },
+  { label: 'Tools', href: '/tools' },
   { label: 'How it works', href: '/#how' },
   { label: 'Roadmap', href: '/roadmap' },
 ];

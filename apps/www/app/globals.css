@@ -1,3 +1,11 @@
+/* Tailwind — generated utilities used ONLY by the live-preview surface
+   (.ibird-preview). Preflight is disabled in tailwind.config.ts, so `@tailwind
+   base` emits no global reset; it only anchors the `base` section so our scoped
+   base rules (below) land before the utilities and `border-primary` etc. win. */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root,
 [data-theme="dark"] {
   --background: #0a0b0d;
@@ -207,5 +215,163 @@ pre {
 @keyframes blink {
   50% {
     opacity: 0;
+  }
+}
+
+/* ── Live-preview surface ──────────────────────────────────────────────────
+   Real registry components mount inside `.ibird-preview` and speak the shadcn
+   token names as HSL *channels* (e.g. --primary: 83 100% 59%), consumed via
+   hsl(var(--…)) by the Tailwind preset. The docs site uses the SAME names as
+   full colours on :root, so we redeclare the channel form here — scoped to the
+   preview only, never on :root. Values mirror registry/items/theme/theme.css;
+   keep them in sync if that file changes. Dark is the default; light follows
+   the ancestor [data-theme="light"] the docs toggles on <html>. */
+.ibird-preview {
+  --background: 240 10% 3.9%;
+  --foreground: 0 0% 98%;
+  --muted: 240 3.7% 15.9%;
+  --muted-foreground: 240 5% 64.9%;
+  --border: 240 3.7% 15.9%;
+  --input: 240 3.7% 15.9%;
+  --ring: 83 100% 59%;
+  --primary: 83 100% 59%;
+  --primary-foreground: 80 60% 8%;
+  --destructive: 0 70% 55%;
+  --destructive-foreground: 0 0% 98%;
+  --radius: 0.5rem;
+  color: hsl(var(--foreground));
+}
+[data-theme="light"] .ibird-preview {
+  --background: 0 0% 100%;
+  --foreground: 240 10% 3.9%;
+  --muted: 240 4.8% 95.9%;
+  --muted-foreground: 240 3.8% 46.1%;
+  --border: 240 5.9% 90%;
+  --input: 240 5.9% 90%;
+  --ring: 83 65% 40%;
+  --primary: 83 68% 40%;
+  --primary-foreground: 80 60% 8%;
+  --destructive: 0 72% 51%;
+  --destructive-foreground: 0 0% 98%;
+}
+
+/* Default border colour for the preview, mirroring theme.css's base rule.
+   With preflight off, Tailwind's `border` / `divide` utilities would fall back
+   to currentColor; this restores the themed border. It sits in @layer base so
+   explicit utilities like `border-primary` (in the utilities layer) still win. */
+@layer base {
+  .ibird-preview *,
+  .ibird-preview *::before,
+  .ibird-preview *::after {
+    border-color: hsl(var(--border));
+  }
+}
+
+/* ── Preview stage ─────────────────────────────────────────────────────────
+   The "playground canvas" the live demo sits on. Lives inside .ibird-preview,
+   so it inherits the shadcn channel tokens and can use hsl(var(--…)) freely. */
+.ibird-stage {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  min-height: 220px;
+  padding: 44px 28px;
+  border: 1px solid hsl(var(--border));
+  border-radius: 16px;
+  background: hsl(var(--background));
+  overflow: hidden;
+  isolation: isolate;
+}
+/* dotted grid, faded out toward the edges */
+.ibird-stage::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background-image: radial-gradient(hsl(var(--foreground) / 0.07) 1px, transparent 1.5px);
+  background-size: 18px 18px;
+  -webkit-mask-image: radial-gradient(ellipse 70% 70% at 50% 45%, #000 30%, transparent 80%);
+  mask-image: radial-gradient(ellipse 70% 70% at 50% 45%, #000 30%, transparent 80%);
+}
+/* soft accent glow drifting at the top */
+.ibird-stage::after {
+  content: "";
+  position: absolute;
+  inset: -45%;
+  z-index: -1;
+  background: radial-gradient(circle at 50% 8%, hsl(var(--primary) / 0.12), transparent 55%);
+  pointer-events: none;
+  animation: ibird-glow 9s ease-in-out infinite alternate;
+}
+@keyframes ibird-glow {
+  from {
+    transform: translateX(-6%) scale(1);
+    opacity: 0.7;
+  }
+  to {
+    transform: translateX(6%) scale(1.08);
+    opacity: 1;
+  }
+}
+
+/* Entrance: replays whenever the demo remounts (new use case or Replay). */
+.ibird-demo {
+  animation: ibird-pop-in 0.45s cubic-bezier(0.21, 0.97, 0.36, 1) both;
+}
+@keyframes ibird-pop-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Replay control, pinned to the stage corner. */
+.ibird-replay {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 11px;
+  font-family: "Geist Mono", monospace;
+  font-size: 11.5px;
+  color: hsl(var(--foreground) / 0.6);
+  background: hsl(var(--background) / 0.55);
+  border: 1px solid hsl(var(--border));
+  border-radius: 9px;
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  transition: color 0.15s ease, border-color 0.15s ease, transform 0.12s ease;
+}
+.ibird-replay:hover {
+  color: hsl(var(--foreground));
+  border-color: hsl(var(--primary) / 0.7);
+}
+.ibird-replay:active {
+  transform: scale(0.95);
+}
+.ibird-replay svg {
+  transition: transform 0.5s cubic-bezier(0.21, 0.97, 0.36, 1);
+}
+.ibird-replay:hover svg {
+  transform: rotate(-180deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ibird-stage::after,
+  .ibird-demo,
+  .ibird-replay svg {
+    animation: none;
+    transition: none;
   }
 }

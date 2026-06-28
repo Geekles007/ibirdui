@@ -3096,6 +3096,10 @@ export interface PageLink {
 export const pages: PageLink[] = [
   { label: 'Home', hint: 'Page', href: '/' },
   { label: 'Components', hint: 'Page', href: '/components' },
+  { label: 'Tools', hint: 'CLI & MCP', href: '/tools' },
+  { label: 'CLI doctor', hint: 'Tools', href: '/tools#doctor' },
+  { label: 'CLI upgrade', hint: 'Tools', href: '/tools#upgrade' },
+  { label: 'MCP server', hint: 'Tools', href: '/tools#mcp' },
   { label: 'How it works', hint: 'Section', href: '/#how' },
   { label: 'Comparison', hint: 'Section', href: '/#compare' },
   { label: 'Quick start', hint: 'Section', href: '/#quickstart' },
