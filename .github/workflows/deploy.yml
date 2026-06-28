@@ -42,6 +42,17 @@ jobs:
       - run: pnpm registry:build
       - name: Build static site (+ registry under /r)
         run: pnpm --filter ibirdui-www build
+      - name: Normalize FTP server dir
+        # The action requires server-dir to end with "/". Read the secret via an
+        # env var (not string-interpolated into the script) and append the slash
+        # if it's missing, re-masking the result.
+        env:
+          RAW_DIR: ${{ secrets.FTP_SERVER_DIR }}
+        run: |
+          DIR="$RAW_DIR"
+          case "$DIR" in */) ;; *) DIR="$DIR/" ;; esac
+          echo "::add-mask::$DIR"
+          echo "FTP_DIR=$DIR" >> "$GITHUB_ENV"
       - name: Deploy to web hosting over FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
@@ -52,4 +63,4 @@ jobs:
           # doesn't support FTP over TLS.
           protocol: ftps
           local-dir: apps/www/out/
-          server-dir: ${{ secrets.FTP_SERVER_DIR }}
+          server-dir: ${{ env.FTP_DIR }}
