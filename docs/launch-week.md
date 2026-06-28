@@ -56,8 +56,9 @@ Open source, MIT, on npm.
 npx ibirdui add async-button
 ```
 
-Repo + live docs 👇
-https://github.com/Geekles007/ibirdui
+Live docs 👇
+https://ui.ibird.dev
+Repo: https://github.com/Geekles007/ibirdui
 
 Feedback very welcome — especially on the MCP tool design.
 
@@ -90,7 +91,7 @@ The bigger idea: ibirdui builds on shadcn's principle — you own the code, it's
 ✅ `ibirdui upgrade` — edit-safe updates that never clobber your local changes
 ✅ A live, interactive playground on the docs site
 
-Open source, MIT, on npm → https://github.com/Geekles007/ibirdui
+Open source, MIT, on npm. Live docs → https://ui.ibird.dev · Repo → https://github.com/Geekles007/ibirdui
 
 Curious what people think about giving LLMs real, verified components to compose with — instead of letting them hallucinate UI.
 
@@ -133,7 +134,8 @@ Then *"use ibirdui to build a save button with a loading state"* pulls the real 
 
 **The thesis** (shadcn's ownership idea, taken further): you own the code *and* it's state-complete + accessibility-tested out of the box.
 
-Repo + live docs: https://github.com/Geekles007/ibirdui
+Live docs: https://ui.ibird.dev
+Repo: https://github.com/Geekles007/ibirdui
 Install a component: `npx ibirdui add async-button`
 
 It's a solo open-source project and I'd genuinely love feedback — especially on the MCP tool design: are search/get/list the right primitives? What would *you* want an assistant to be able to query?
