@@ -1,10 +1,10 @@
 {
   "name": "ibirdui-mcp",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Model Context Protocol server exposing the ibirdui registry to AI assistants — search components by intent and read their real source.",
   "license": "MIT",
   "author": "Geekles007",
-  "homepage": "https://geekles007.github.io/ibirdui",
+  "homepage": "https://ui.ibird.dev",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Geekles007/ibirdui.git",

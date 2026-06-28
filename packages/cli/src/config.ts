@@ -1,5 +1,5 @@
 /** Default registry base URL. Override per-project when you fork this CLI. */
-export const DEFAULT_REGISTRY = 'https://Geekles007.github.io/ibirdui';
+export const DEFAULT_REGISTRY = 'https://ui.ibird.dev';
 
 /**
  * Resolve the registry base URL with the precedence:

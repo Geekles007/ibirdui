@@ -44,7 +44,7 @@ claude mcp add ibirdui -- npx -y ibirdui-mcp
 
 | Env | Default | Purpose |
 | --- | --- | --- |
-| `IBIRDUI_REGISTRY_URL` | `https://Geekles007.github.io/ibirdui` | Registry base URL. Supports `file://` for a local build. |
+| `IBIRDUI_REGISTRY_URL` | `https://ui.ibird.dev` | Registry base URL. Supports `file://` for a local build. |
 
 ```bash
 # Point at a local registry build (registry/public) for development:

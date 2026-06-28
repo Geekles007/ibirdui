@@ -1,10 +1,10 @@
 {
   "name": "ibirdui",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "The ibirdui CLI — add, upgrade and gen state-complete, accessible components into your project.",
   "license": "MIT",
   "author": "Geekles007",
-  "homepage": "https://geekles007.github.io/ibirdui",
+  "homepage": "https://ui.ibird.dev",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Geekles007/ibirdui.git",

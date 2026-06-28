@@ -29,7 +29,7 @@ const ITEMS_DIR = join(ROOT, 'items');
 const OUT_DIR = join(ROOT, 'public', 'r');
 
 const REGISTRY_NAME = 'ibirdui';
-const HOMEPAGE = 'https://Geekles007.github.io/ibirdui';
+const HOMEPAGE = 'https://ui.ibird.dev';
 
 interface MetaFile {
   from: string;

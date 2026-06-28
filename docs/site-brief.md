@@ -11,7 +11,7 @@ ibirdui is a **registry-as-code** component library: like shadcn/ui, you don't i
 Real facts to display:
 - **Name:** ibirdui · **Author:** Geekles007 · **License:** MIT
 - **GitHub:** https://github.com/Geekles007/ibirdui
-- **Registry / live site base:** https://geekles007.github.io/ibirdui
+- **Registry / live site base:** https://ui.ibird.dev
 - **npm packages:** `ibirdui-core` (the contract), `ibirdui` (CLI, binary `ibirdui`)
 - **Install a component:** `npx ibirdui add data-list`
 - **CLI commands:** `ibirdui list`, `ibirdui add <item>`, `ibirdui upgrade [items]`, `ibirdui gen "<prompt>"`

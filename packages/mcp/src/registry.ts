@@ -2,7 +2,7 @@ import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 
 /** Default registry base URL. Override with IBIRDUI_REGISTRY_URL. */
-export const DEFAULT_REGISTRY = 'https://Geekles007.github.io/ibirdui';
+export const DEFAULT_REGISTRY = 'https://ui.ibird.dev';
 
 /** Resolve the registry base URL: env override > built-in default. */
 export function resolveRegistry(): string {
