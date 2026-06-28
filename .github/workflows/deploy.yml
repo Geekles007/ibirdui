@@ -1,5 +1,21 @@
 name: Deploy site + registry
 
+# Builds the static site (Next export, which bundles the registry under /r)
+# and deploys it over FTP to the web hosting that serves https://ui.ibird.dev.
+#
+# Required repository configuration (Settings → Secrets and variables → Actions):
+#   Secrets:    FTP_SERVER     – FTP(S) host, e.g. ftp.ibird.dev
+#               FTP_USERNAME   – FTP account user
+#               FTP_PASSWORD   – FTP account password
+#               FTP_SERVER_DIR – absolute path to the ui.ibird.dev document root
+#                                on the host, with a trailing slash
+#                                (e.g. /public_html/ or /domains/ibird.dev/ui/).
+#
+# The deploy is incremental: the action keeps a .ftp-deploy-sync-state.json on
+# the server and only transfers changed files, so it won't touch unrelated
+# files already on the host. BASE_PATH is intentionally left unset so the site
+# is served from the domain root (not a /<repo> subpath like on GitHub Pages).
+
 on:
   push:
     branches: [main]
@@ -7,19 +23,14 @@ on:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 concurrency:
-  group: pages
+  group: deploy
   cancel-in-progress: true
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -27,17 +38,18 @@ jobs:
         with:
           node-version: 22
           cache: pnpm
-      - uses: actions/configure-pages@v5
-        id: pages
       - run: pnpm install --frozen-lockfile
       - run: pnpm registry:build
-      - name: Build site
+      - name: Build static site (+ registry under /r)
         run: pnpm --filter ibirdui-www build
-        env:
-          # Project pages live under /<repo>; user/org pages should set this to ''.
-          BASE_PATH: ${{ steps.pages.outputs.base_path }}
-      - uses: actions/upload-pages-artifact@v3
+      - name: Deploy to web hosting over FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          path: apps/www/out
-      - uses: actions/deploy-pages@v4
-        id: deployment
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          # FTPS (encrypted) by default; switch to "ftp" only if your host
+          # doesn't support FTP over TLS.
+          protocol: ftps
+          local-dir: apps/www/out/
+          server-dir: ${{ secrets.FTP_SERVER_DIR }}
