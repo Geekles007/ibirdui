@@ -1,6 +1,7 @@
 import { Command } from 'commander';
 import { red } from 'kleur/colors';
 import { add } from './commands/add.js';
+import { doctor } from './commands/doctor.js';
 import { gen } from './commands/gen.js';
 import { list } from './commands/list.js';
 import { upgrade } from './commands/upgrade.js';
@@ -31,6 +32,16 @@ program
   .option('-c, --cwd <path>', 'working directory', process.cwd())
   .action(async (items: string[], options) => {
     await upgrade(items, options);
+  });
+
+program
+  .command('doctor')
+  .description('Check installed items for local edits, missing files and available updates.')
+  .option('-r, --registry <url>', 'registry base URL')
+  .option('-c, --cwd <path>', 'working directory', process.cwd())
+  .option('--offline', 'skip the registry check; diff disk against the lockfile only', false)
+  .action(async (options) => {
+    await doctor(options);
   });
 
 program
