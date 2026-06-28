@@ -1,0 +1,38 @@
+{
+  "name": "separator",
+  "type": "component",
+  "version": "1.0.0",
+  "description": "A thin rule between content, horizontal or vertical. Decorative by default (aria-hidden, role=none) so it never pollutes the accessibility tree; pass decorative={false} when the rule genuinely separates two groups of meaning to expose role=separator with the right aria-orientation.",
+  "states": [],
+  "a11y": {
+    "level": "AA",
+    "tested": true,
+    "notes": [
+      "Decorative by default: role=none + aria-hidden, so a purely visual divider adds nothing to the accessibility tree",
+      "When meaningful (decorative={false}) it exposes role=separator with aria-orientation",
+      "Never relies on colour alone to convey grouping"
+    ]
+  },
+  "manifest": {
+    "intents": [
+      "a divider / horizontal rule between sections",
+      "a vertical separator between toolbar items",
+      "a meaningful separator in a menu (decorative={false})"
+    ],
+    "examples": [
+      "<Separator />",
+      "<Separator orientation=\"vertical\" />",
+      "<Separator decorative={false} />"
+    ]
+  },
+  "dependencies": ["react"],
+  "devDependencies": [],
+  "registryDependencies": [],
+  "files": [
+    {
+      "from": "files/separator.tsx",
+      "path": "components/separator.tsx",
+      "type": "component"
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "name": "button",
+  "type": "component",
+  "version": "1.0.0",
+  "description": "The plain button primitive: themed variants (default, secondary, outline, ghost, destructive, link) and sizes (sm, md, lg, icon) over a native <button>, so it's keyboard- and screen-reader-accessible with a visible focus ring. For promise-aware actions, use async-button.",
+  "states": [],
+  "a11y": {
+    "level": "AA",
+    "tested": true,
+    "notes": [
+      "A native <button> — focusable, Enter/Space activated and announced as a button with no extra wiring",
+      "Shows a visible focus-visible ring for keyboard users",
+      "disabled removes pointer events and is conveyed to assistive tech via the native attribute"
+    ]
+  },
+  "manifest": {
+    "intents": [
+      "a plain button with style variants and sizes",
+      "primary / secondary / outline / ghost / destructive / link button",
+      "a link styled as a button via buttonClasses()"
+    ],
+    "examples": [
+      "<Button>Save</Button>",
+      "<Button variant=\"outline\" size=\"sm\">Cancel</Button>",
+      "<Button variant=\"destructive\">Delete</Button>"
+    ]
+  },
+  "dependencies": ["react"],
+  "devDependencies": [],
+  "registryDependencies": [],
+  "files": [
+    {
+      "from": "files/button.tsx",
+      "path": "components/button.tsx",
+      "type": "component"
+    }
+  ]
+}

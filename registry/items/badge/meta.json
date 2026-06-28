@@ -1,0 +1,37 @@
+{
+  "name": "badge",
+  "type": "component",
+  "version": "1.0.0",
+  "description": "A small status pill / label: a styled span with themed variants (default, secondary, outline, destructive). Decorative by default — the text carries the meaning, with guidance to label colour-only status for assistive tech.",
+  "states": [],
+  "a11y": {
+    "level": "AA",
+    "tested": true,
+    "notes": [
+      "Renders inline text, so its label is read in place — no role needed",
+      "When status is signalled by colour alone, the text or an aria-label must still convey it (never colour-only)"
+    ]
+  },
+  "manifest": {
+    "intents": [
+      "a status pill / badge / chip / tag label",
+      "a small coloured label for state (new, draft, failed, beta)",
+      "a count or category marker"
+    ],
+    "examples": [
+      "<Badge>New</Badge>",
+      "<Badge variant=\"secondary\">Draft</Badge>",
+      "<Badge variant=\"destructive\">Failed</Badge>"
+    ]
+  },
+  "dependencies": ["react"],
+  "devDependencies": [],
+  "registryDependencies": [],
+  "files": [
+    {
+      "from": "files/badge.tsx",
+      "path": "components/badge.tsx",
+      "type": "component"
+    }
+  ]
+}

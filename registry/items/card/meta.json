@@ -1,0 +1,36 @@
+{
+  "name": "card",
+  "type": "component",
+  "version": "1.0.0",
+  "description": "A surface container and its parts (Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter). Pure layout primitives with no imposed roles or semantics, so they compose into stat tiles, panels, list items and dashboard cards. The title is a div, not a heading, so it never forces a heading level.",
+  "states": [],
+  "a11y": {
+    "level": "AA",
+    "tested": true,
+    "notes": [
+      "Carries no role of its own — it's a styled container, so it never adds noise to the accessibility tree",
+      "CardTitle is a div, not a heading, so a card never breaks the document's heading order; wrap your own heading when the outline matters",
+      "All parts forward refs and arbitrary props for composition"
+    ]
+  },
+  "manifest": {
+    "intents": [
+      "a card / panel / surface container",
+      "a stat tile or KPI card for a dashboard",
+      "a bordered content box with header, body and footer"
+    ],
+    "examples": [
+      "<Card><CardHeader><CardTitle>Revenue</CardTitle></CardHeader><CardContent>$48,210</CardContent></Card>"
+    ]
+  },
+  "dependencies": ["react"],
+  "devDependencies": [],
+  "registryDependencies": [],
+  "files": [
+    {
+      "from": "files/card.tsx",
+      "path": "components/card.tsx",
+      "type": "component"
+    }
+  ]
+}
