@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     title: 'ibirdui',
     description:
       'State-complete, accessible, upgradeable React components — distributed as registry-as-code.',
-    url: 'https://geekles007.github.io/ibirdui',
+    url: 'https://ui.ibird.dev',
     siteName: 'ibirdui',
     type: 'website',
   },
