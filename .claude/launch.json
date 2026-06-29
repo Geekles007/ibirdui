@@ -1,0 +1,12 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "www",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["--filter", "ibirdui-www", "exec", "next", "dev"],
+      "port": 3100,
+      "autoPort": true
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 import { existsSync } from 'node:fs';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { dirname, join, resolve } from 'node:path';
-import { resolveItemTree } from 'ibirdui-core';
+import { resolveItemTreeWithOrigin } from 'ibirdui-core';
 import { bold, cyan, dim, green, red, yellow } from 'kleur/colors';
 import { resolveRegistry } from '../config.js';
 import { nodeFetch } from '../fetch.js';
@@ -25,7 +25,7 @@ export async function add(names: string[], options: AddOptions): Promise<void> {
 
   console.log(dim(`Registry: ${baseUrl}`));
 
-  const tree = await resolveItemTree(baseUrl, names, { fetch: nodeFetch });
+  const tree = await resolveItemTreeWithOrigin(baseUrl, names, { fetch: nodeFetch });
   const lock = await readLockfile(cwd, baseUrl);
 
   const npmDeps = new Set<string>();
@@ -33,7 +33,7 @@ export async function add(names: string[], options: AddOptions): Promise<void> {
   let written = 0;
   let skipped = 0;
 
-  for (const item of tree) {
+  for (const { item, url } of tree) {
     for (const dep of item.dependencies) npmDeps.add(dep);
     for (const dep of item.devDependencies) npmDevDeps.add(dep);
 
@@ -51,8 +51,10 @@ export async function add(names: string[], options: AddOptions): Promise<void> {
       written += 1;
       itemWritten = true;
     }
-    // Track what we installed so `ibirdui upgrade` can detect local edits later.
-    if (itemWritten || !lock.items[item.name]) recordItem(lock, item);
+    // Track what we installed — version, per-file hashes, and the origin URL —
+    // so `ibirdui upgrade` can detect local edits and re-fetch from the right
+    // registry later.
+    if (itemWritten || !lock.items[item.name]) recordItem(lock, item, url);
   }
 
   await writeLockfile(cwd, lock);

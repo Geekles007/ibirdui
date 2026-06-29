@@ -9,6 +9,14 @@ export const LOCKFILE_NAME = 'ibirdui.lock.json';
 /** One installed item: the version pinned and the hash of each file we wrote. */
 export interface LockedItem {
   version: string;
+  /**
+   * Canonical URL the item was fetched from — its upgrade origin. Lets a block
+   * pulled from one registry and a primitive pulled from another both upgrade
+   * against the right source. Optional for back-compat with lockfiles written
+   * before multi-origin support; `upgrade` falls back to the top-level
+   * `registry` base when it's absent.
+   */
+  origin?: string;
   files: Record<string, string>;
 }
 
@@ -41,11 +49,15 @@ export async function writeLockfile(cwd: string, lock: Lockfile): Promise<void> 
   await writeFile(join(cwd, LOCKFILE_NAME), `${JSON.stringify(lock, null, 2)}\n`);
 }
 
-/** Record an installed item's version and per-file fingerprints. */
-export function recordItem(lock: Lockfile, item: RegistryItem): void {
+/**
+ * Record an installed item's version, origin and per-file fingerprints. Pass
+ * `origin` (the canonical URL the item came from) so `upgrade` can re-fetch it
+ * from the right registry; omit it for same-registry items written the old way.
+ */
+export function recordItem(lock: Lockfile, item: RegistryItem, origin?: string): void {
   const files: Record<string, string> = {};
   for (const file of item.files) {
     files[file.path] = file.hash ?? hashContent(file.content);
   }
-  lock.items[item.name] = { version: item.version, files };
+  lock.items[item.name] = { version: item.version, ...(origin ? { origin } : {}), files };
 }

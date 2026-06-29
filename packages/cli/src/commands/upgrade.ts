@@ -1,15 +1,25 @@
 import { existsSync } from 'node:fs';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { dirname, join, resolve } from 'node:path';
-import { type RegistryItem, fetchRegistryItem, hashContent } from 'ibirdui-core';
+import { type RegistryItem, fetchRegistryItemByUrl, hashContent, itemUrl } from 'ibirdui-core';
 import { bold, cyan, dim, green, red, yellow } from 'kleur/colors';
 import { resolveRegistry } from '../config.js';
 import { nodeFetch } from '../fetch.js';
-import { readLockfile, recordItem, writeLockfile } from '../lockfile.js';
+import { type LockedItem, readLockfile, recordItem, writeLockfile } from '../lockfile.js';
 
 export interface UpgradeOptions {
   registry?: string;
   cwd?: string;
+}
+
+/**
+ * The URL to re-fetch an installed item from on upgrade. Prefers the origin
+ * recorded at install time (so cross-registry items go back to their own
+ * registry); falls back to deriving it from the base URL by name for lockfiles
+ * written before multi-origin support.
+ */
+export function upgradeOrigin(locked: LockedItem, baseUrl: string, name: string): string {
+  return locked.origin ?? itemUrl(baseUrl, name);
 }
 
 /**
@@ -48,7 +58,8 @@ export async function upgrade(names: string[], options: UpgradeOptions): Promise
       continue;
     }
 
-    const item: RegistryItem = await fetchRegistryItem(baseUrl, name, { fetch: nodeFetch });
+    const origin = upgradeOrigin(locked, baseUrl, name);
+    const item: RegistryItem = await fetchRegistryItemByUrl(origin, { fetch: nodeFetch });
     if (item.version === locked.version) {
       console.log(`${dim('ok  ')} ${name}@${item.version} ${dim('(up to date)')}`);
       upToDate += 1;
@@ -90,7 +101,8 @@ export async function upgrade(names: string[], options: UpgradeOptions): Promise
 
     // Pin the new version. Conflicted files keep the user's content on disk but
     // we record the new hashes so the next upgrade compares against this release.
-    recordItem(lock, item);
+    // Re-record the origin too — backfilling it for legacy lockfiles.
+    recordItem(lock, item, origin);
   }
 
   await writeLockfile(cwd, lock);

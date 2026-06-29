@@ -1,0 +1,30 @@
+{
+  "name": "block-motion",
+  "type": "lib",
+  "version": "1.0.0",
+  "description": "The shared Framer Motion animation language for ibirdui blocks: signature spring presets, reveal / enter-exit variants, a namespaced shared-layout id helper, and a MotionProvider that makes every block honour prefers-reduced-motion automatically.",
+  "states": [],
+  "dependencies": ["react", "framer-motion"],
+  "devDependencies": [],
+  "registryDependencies": [],
+  "manifest": {
+    "intents": [
+      "add consistent, accessible Framer Motion animation to a block",
+      "stagger children into view on mount",
+      "animate enter and exit with AnimatePresence",
+      "share a layout animation between elements (morphing pill, reordering cards)",
+      "respect prefers-reduced-motion across a whole block"
+    ],
+    "examples": [
+      "<MotionProvider><motion.ul variants={reveal} initial=\"hidden\" animate=\"visible\">{items.map((i) => (<motion.li key={i.id} variants={revealItem} />))}</motion.ul></MotionProvider>",
+      "<motion.span layoutId={layoutId('tabs', active)} transition={springs.layout} />"
+    ]
+  },
+  "files": [
+    {
+      "from": "files/block-motion.tsx",
+      "path": "lib/block-motion.tsx",
+      "type": "lib"
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "name": "slider",
+  "type": "component",
+  "version": "1.0.0",
+  "description": "A single-thumb range slider built on a native <input type=\"range\">, so it gets role=slider with aria-valuenow/min/max, full keyboard control (arrows, Home/End, PageUp/PageDown) and pointer drag for free. Themed with accent-primary. Works controlled (value + onValueChange) or uncontrolled (defaultValue). Name it via aria-label or aria-labelledby.",
+  "states": [],
+  "a11y": {
+    "level": "AA",
+    "tested": true,
+    "notes": [
+      "Native <input type=\"range\"> carries role=slider with aria-valuenow/min/max, so assistive tech reads and announces the current value",
+      "Full keyboard control is native: arrows step, Home/End jump to min/max, PageUp/PageDown step by a larger amount",
+      "Needs an accessible name (aria-label or aria-labelledby); shows a visible focus-visible ring"
+    ]
+  },
+  "manifest": {
+    "intents": [
+      "a single-value range slider (volume, brightness, opacity)",
+      "a numeric input adjustable by drag or keyboard",
+      "a controlled or uncontrolled slider"
+    ],
+    "examples": [
+      "<Slider defaultValue={40} aria-label=\"Volume\" />",
+      "<Slider value={vol} onValueChange={setVol} max={11} aria-label=\"Volume\" />"
+    ]
+  },
+  "dependencies": ["react"],
+  "devDependencies": [],
+  "registryDependencies": [],
+  "files": [
+    {
+      "from": "files/slider.tsx",
+      "path": "components/slider.tsx",
+      "type": "component"
+    }
+  ]
+}

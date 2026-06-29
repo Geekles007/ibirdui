@@ -7,6 +7,7 @@ import {
   normalizeBaseUrl,
   registryItemSchema,
   resolveItemTree,
+  resolveItemTreeWithOrigin,
 } from './index.js';
 
 function makeItem(partial: Partial<RegistryItem> & { name: string }): RegistryItem {
@@ -80,5 +81,82 @@ describe('resolveItemTree', () => {
     await expect(
       resolveItemTree('https://x.dev', ['a'], { fetch: fakeFetch(items) }),
     ).rejects.toThrow(/Circular/);
+  });
+});
+
+/** A fake fetch backed by an in-memory registry keyed by full canonical URL. */
+function urlFetch(items: Record<string, RegistryItem>) {
+  return async (input: string) => {
+    const item = items[input];
+    return {
+      ok: Boolean(item),
+      status: item ? 200 : 404,
+      json: async () => item,
+    };
+  };
+}
+
+describe('resolveItemTree (cross-registry)', () => {
+  const UI = 'https://ui.ibird.dev';
+  const BLOCKS = 'https://blocks.ibird.dev';
+
+  it('follows an absolute-URL dependency into another registry', async () => {
+    // pricing (blocks) → card (ui, by URL) → button (ui, by local name). The
+    // local "button" must resolve against UI, not the blocks root base.
+    const items = {
+      [`${UI}/r/button.json`]: makeItem({ name: 'button' }),
+      [`${UI}/r/card.json`]: makeItem({ name: 'card', registryDependencies: ['button'] }),
+      [`${BLOCKS}/r/pricing.json`]: makeItem({
+        name: 'pricing',
+        registryDependencies: [`${UI}/r/card.json`],
+      }),
+    };
+    const tree = await resolveItemTree(BLOCKS, ['pricing'], { fetch: urlFetch(items) });
+    expect(tree.map((i) => i.name)).toEqual(['button', 'card', 'pricing']);
+  });
+
+  it('de-duplicates a primitive referenced by both URL and local name', async () => {
+    // pricing depends on button (by URL) AND card (by URL); card also depends on
+    // button (by local name). Same canonical URL → button is emitted once.
+    const items = {
+      [`${UI}/r/button.json`]: makeItem({ name: 'button' }),
+      [`${UI}/r/card.json`]: makeItem({ name: 'card', registryDependencies: ['button'] }),
+      [`${BLOCKS}/r/pricing.json`]: makeItem({
+        name: 'pricing',
+        registryDependencies: [`${UI}/r/button.json`, `${UI}/r/card.json`],
+      }),
+    };
+    const tree = await resolveItemTree(BLOCKS, ['pricing'], { fetch: urlFetch(items) });
+    expect(tree.map((i) => i.name)).toEqual(['button', 'card', 'pricing']);
+  });
+
+  it('accepts an absolute URL as a root', async () => {
+    const items = {
+      [`${UI}/r/button.json`]: makeItem({ name: 'button' }),
+      [`${UI}/r/card.json`]: makeItem({ name: 'card', registryDependencies: ['button'] }),
+    };
+    const tree = await resolveItemTree(BLOCKS, [`${UI}/r/card.json`], {
+      fetch: urlFetch(items),
+    });
+    expect(tree.map((i) => i.name)).toEqual(['button', 'card']);
+  });
+
+  it('pairs each item with the canonical URL it was fetched from', async () => {
+    // The block lives on BLOCKS; its primitives on UI. Each item's origin URL
+    // is what the installer records so upgrade re-fetches from the right place.
+    const items = {
+      [`${UI}/r/button.json`]: makeItem({ name: 'button' }),
+      [`${BLOCKS}/r/pricing.json`]: makeItem({
+        name: 'pricing',
+        registryDependencies: [`${UI}/r/button.json`],
+      }),
+    };
+    const tree = await resolveItemTreeWithOrigin(BLOCKS, ['pricing'], {
+      fetch: urlFetch(items),
+    });
+    expect(tree.map((r) => [r.item.name, r.url])).toEqual([
+      ['button', `${UI}/r/button.json`],
+      ['pricing', `${BLOCKS}/r/pricing.json`],
+    ]);
   });
 });
