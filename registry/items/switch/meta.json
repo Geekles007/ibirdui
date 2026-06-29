@@ -1,0 +1,37 @@
+{
+  "name": "switch",
+  "type": "component",
+  "version": "1.0.0",
+  "description": "A settings toggle following the ARIA switch pattern: a <button role=\"switch\"> with aria-checked, toggled by click and Space/Enter. Works controlled (checked + onCheckedChange) or uncontrolled (defaultChecked). The synchronous switch — for a server-committed toggle that rolls back on failure, use optimistic-toggle.",
+  "states": [],
+  "a11y": {
+    "level": "AA",
+    "tested": true,
+    "notes": [
+      "role=switch with aria-checked, so assistive tech announces it as a toggle and reads its on/off state",
+      "A native <button>, so it's focusable and activated by Space/Enter",
+      "Needs a label via aria-label, aria-labelledby or a wrapping label; shows a visible focus-visible ring"
+    ]
+  },
+  "manifest": {
+    "intents": [
+      "an on/off settings toggle / switch",
+      "a boolean preference control (notifications, dark mode)",
+      "a controlled or uncontrolled toggle"
+    ],
+    "examples": [
+      "<Switch defaultChecked aria-label=\"Email notifications\" />",
+      "<Switch checked={on} onCheckedChange={setOn} aria-label=\"Dark mode\" />"
+    ]
+  },
+  "dependencies": ["react"],
+  "devDependencies": [],
+  "registryDependencies": [],
+  "files": [
+    {
+      "from": "files/switch.tsx",
+      "path": "components/switch.tsx",
+      "type": "component"
+    }
+  ]
+}

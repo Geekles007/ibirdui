@@ -1,0 +1,34 @@
+{
+  "name": "progress",
+  "type": "component",
+  "version": "1.0.0",
+  "description": "A progress bar following the ARIA progressbar pattern. Pass value (and optionally max) for a determinate bar that sets aria-valuenow/min/max; omit value for an indeterminate bar (no aria-valuenow, sliding animation that respects prefers-reduced-motion). Name it via label, aria-label or aria-labelledby.",
+  "states": [],
+  "a11y": {
+    "level": "AA",
+    "tested": true,
+    "notes": [
+      "role=progressbar with aria-valuenow/min/max when determinate, so assistive tech reads the percentage",
+      "Indeterminate mode omits aria-valuenow, the correct signal for unknown-length progress",
+      "Needs an accessible name (label/aria-label/aria-labelledby); the sliding animation is disabled under prefers-reduced-motion"
+    ]
+  },
+  "manifest": {
+    "intents": [
+      "a progress bar / completion meter",
+      "determinate progress (upload %, steps done)",
+      "an indeterminate loading bar of unknown length"
+    ],
+    "examples": ["<Progress value={72} label=\"Upload\" />", "<Progress label=\"Loading\" />"]
+  },
+  "dependencies": ["react"],
+  "devDependencies": [],
+  "registryDependencies": [],
+  "files": [
+    {
+      "from": "files/progress.tsx",
+      "path": "components/progress.tsx",
+      "type": "component"
+    }
+  ]
+}

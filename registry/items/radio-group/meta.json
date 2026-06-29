@@ -1,0 +1,36 @@
+{
+  "name": "radio-group",
+  "type": "component",
+  "version": "1.0.0",
+  "description": "A single-choice group: RadioGroup (role=radiogroup) plus Radio items that are native <input type=\"radio\"> sharing one name, so the browser gives arrow-key navigation and single-selection for free. Controlled via value + onValueChange. Pair each Radio with a label.",
+  "states": [],
+  "a11y": {
+    "level": "AA",
+    "tested": true,
+    "notes": [
+      "The group is a role=radiogroup; label it with aria-label or aria-labelledby",
+      "Native radios sharing a name get roving focus and arrow-key selection from the browser",
+      "Each option needs a label (wrapping <label> or field); options show a visible focus-visible ring"
+    ]
+  },
+  "manifest": {
+    "intents": [
+      "a radio group / single-choice option list",
+      "pick one of several mutually exclusive options",
+      "a plan or preference selector"
+    ],
+    "examples": [
+      "<RadioGroup value={plan} onValueChange={setPlan} aria-label=\"Plan\"><label><Radio value=\"free\" /> Free</label><label><Radio value=\"pro\" /> Pro</label></RadioGroup>"
+    ]
+  },
+  "dependencies": ["react"],
+  "devDependencies": [],
+  "registryDependencies": [],
+  "files": [
+    {
+      "from": "files/radio-group.tsx",
+      "path": "components/radio-group.tsx",
+      "type": "component"
+    }
+  ]
+}

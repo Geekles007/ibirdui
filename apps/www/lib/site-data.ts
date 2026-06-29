@@ -37,6 +37,13 @@ export const components: Comp[] = [
   { name: 'badge', layer: 0, status: 'done', kind: 'component', a11y: true },
   { name: 'input', layer: 0, status: 'done', kind: 'component', a11y: true },
   { name: 'separator', layer: 0, status: 'done', kind: 'component', a11y: true },
+  { name: 'checkbox', layer: 0, status: 'done', kind: 'component', a11y: true },
+  { name: 'switch', layer: 0, status: 'done', kind: 'component', a11y: true },
+  { name: 'radio-group', layer: 0, status: 'done', kind: 'component', a11y: true },
+  { name: 'textarea', layer: 0, status: 'done', kind: 'component', a11y: true },
+  { name: 'select', layer: 0, status: 'done', kind: 'component', a11y: true },
+  { name: 'alert', layer: 0, status: 'done', kind: 'component', a11y: true },
+  { name: 'progress', layer: 0, status: 'done', kind: 'component', a11y: true },
   { name: 'state-boundary', layer: 1, status: 'done', kind: 'component', a11y: true },
   { name: 'empty-state', layer: 1, status: 'done', kind: 'component', a11y: true },
   { name: 'error-state', layer: 1, status: 'done', kind: 'component', a11y: true },
@@ -118,6 +125,90 @@ export interface Doc {
 }
 
 export const docs: Record<string, Doc> = {
+  checkbox: {
+    intro:
+      'The checkbox primitive — a native <input type="checkbox"> with the themed look and a visible focus ring. Native on purpose: it tabs, toggles on Space and reports its state to assistive tech with no ARIA. Pair it with field or a wrapping label.',
+    apiFile: 'components/checkbox.tsx',
+    api: '<label className="flex items-center gap-2">\n  <Checkbox name="terms" /> Accept the terms\n</label>',
+    a11y: true,
+    a11yList: [
+      'A native checkbox — focusable, Space-toggled and announced with its checked state, no extra wiring.',
+      'Shows a visible focus-visible ring for keyboard users.',
+      'Needs a label via field, a wrapping <label>, or aria-label.',
+    ],
+  },
+  switch: {
+    intro:
+      'A settings toggle following the ARIA switch pattern: a <button role="switch"> with aria-checked, toggled by click and Space/Enter. Works controlled or uncontrolled. The synchronous switch — for a server-committed toggle that rolls back on failure, use optimistic-toggle.',
+    apiFile: 'components/switch.tsx',
+    api: '<Switch defaultChecked aria-label="Email notifications" />\n<Switch checked={on} onCheckedChange={setOn} aria-label="Dark mode" />',
+    a11y: true,
+    a11yList: [
+      'role=switch with aria-checked, announced as a toggle with its on/off state.',
+      'A native <button>: focusable, activated by Space/Enter.',
+      'Needs a label (aria-label/aria-labelledby/wrapping label); shows a focus-visible ring.',
+    ],
+  },
+  'radio-group': {
+    intro:
+      'A single-choice group: RadioGroup (role=radiogroup) plus Radio items that are native radios sharing one name, so the browser gives arrow-key navigation and single-selection for free. Controlled via value + onValueChange.',
+    apiFile: 'components/radio-group.tsx',
+    api: '<RadioGroup value={plan} onValueChange={setPlan} aria-label="Plan">\n  <label><Radio value="free" /> Free</label>\n  <label><Radio value="pro" /> Pro</label>\n</RadioGroup>',
+    a11y: true,
+    a11yList: [
+      'The group is role=radiogroup; label it with aria-label or aria-labelledby.',
+      'Native radios sharing a name get roving focus and arrow-key selection from the browser.',
+      'Each option needs a label; options show a visible focus-visible ring.',
+    ],
+  },
+  textarea: {
+    intro:
+      'The themed multi-line text input — a native <textarea> with the look, a visible focus ring and a destructive border/ring on aria-invalid. Owns no label or error markup: pair it with field.',
+    apiFile: 'components/textarea.tsx',
+    api: '<Field label="Bio" error={errors.bio}>\n  <Textarea name="bio" rows={4} />\n</Field>',
+    a11y: true,
+    a11yList: [
+      'A native <textarea> — focusable and labellable by default.',
+      'Shows a visible focus-visible ring for keyboard users.',
+      'Reflects aria-invalid visually (destructive border + ring).',
+    ],
+  },
+  select: {
+    intro:
+      'The single-select primitive — a native <select> with the themed look and a decorative chevron. Native on purpose: the OS renders the list, so it works on touch, keyboard and screen readers out of the box. For an async type-ahead picker use async-combobox; for several values, multi-select.',
+    apiFile: 'components/select.tsx',
+    api: '<Field label="Role">\n  <Select name="role" defaultValue="member">\n    <option value="member">Member</option>\n    <option value="admin">Admin</option>\n  </Select>\n</Field>',
+    a11y: true,
+    a11yList: [
+      'A native <select> — listbox, keyboard nav and announcements are the platform’s, no ARIA wiring.',
+      'The chevron is aria-hidden and never intercepts pointer events.',
+      'Label it via field or htmlFor; reflects aria-invalid and shows a focus-visible ring.',
+    ],
+  },
+  alert: {
+    intro:
+      'A static callout box (Alert, AlertTitle, AlertDescription) with default and destructive variants — an inline heads-up that’s part of the page, not a transient toast and not an async error-with-retry. Sets no ARIA role by default; add role=alert or role=status when it appears dynamically.',
+    apiFile: 'components/alert.tsx',
+    api: '<Alert variant="destructive" role="alert">\n  <AlertTitle>Payment failed</AlertTitle>\n  <AlertDescription>Your card was declined.</AlertDescription>\n</Alert>',
+    a11y: true,
+    a11yList: [
+      'No role by default — a static callout shouldn’t interrupt assistive tech; add role=alert/status when it appears in response to an action.',
+      'Variant colour is reinforced by the title/description text, never colour alone.',
+      'Title and description impose no heading level.',
+    ],
+  },
+  progress: {
+    intro:
+      'A progress bar following the ARIA progressbar pattern. Pass value (and optionally max) for a determinate bar; omit value for an indeterminate one (no aria-valuenow, sliding animation that respects prefers-reduced-motion). Name it via label/aria-label.',
+    apiFile: 'components/progress.tsx',
+    api: '<Progress value={72} label="Upload" />\n<Progress label="Loading" />   // indeterminate',
+    a11y: true,
+    a11yList: [
+      'role=progressbar with aria-valuenow/min/max when determinate.',
+      'Indeterminate mode omits aria-valuenow — the correct signal for unknown-length progress.',
+      'Needs an accessible name; the sliding animation is disabled under prefers-reduced-motion.',
+    ],
+  },
   button: {
     intro:
       'The plain button primitive — themed variants and sizes over a native <button>, with a visible focus ring. For an action that runs a promise (spinner, disabled-while-pending, announced result), reach for async-button instead.',
