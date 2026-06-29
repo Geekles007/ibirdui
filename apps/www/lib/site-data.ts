@@ -44,6 +44,7 @@ export const components: Comp[] = [
   { name: 'select', layer: 0, status: 'done', kind: 'component', a11y: true },
   { name: 'alert', layer: 0, status: 'done', kind: 'component', a11y: true },
   { name: 'progress', layer: 0, status: 'done', kind: 'component', a11y: true },
+  { name: 'slider', layer: 0, status: 'done', kind: 'component', a11y: true },
   { name: 'state-boundary', layer: 1, status: 'done', kind: 'component', a11y: true },
   { name: 'empty-state', layer: 1, status: 'done', kind: 'component', a11y: true },
   { name: 'error-state', layer: 1, status: 'done', kind: 'component', a11y: true },
@@ -478,6 +479,60 @@ export const docs: Record<string, Doc> = {
       'role=progressbar with aria-valuenow/min/max when determinate.',
       'Indeterminate mode omits aria-valuenow — the correct signal for unknown-length progress.',
       'Needs an accessible name; the sliding animation is disabled under prefers-reduced-motion.',
+    ],
+  },
+  slider: {
+    intro:
+      'A single-thumb range slider built on a native <input type="range">, so role=slider with aria-valuenow/min/max, full keyboard control (arrows, Home/End, PageUp/PageDown) and pointer drag all come for free. Themed with accent-primary, like radio-group. Works controlled (value + onValueChange) or uncontrolled (defaultValue). Name it via aria-label.',
+    apiFile: 'components/slider.tsx',
+    tutorialIntro:
+      'Slider lets the browser do the hard part: a native range input already is a slider. You just theme it and read the value.',
+    tutorial: [
+      {
+        title: 'Install',
+        body: 'Copies the component plus its axe test into your repo.',
+        file: 'terminal',
+        code: '$ npx ibirdui add slider\n✓ wrote components/slider.tsx\n✓ wrote components/slider.test.tsx',
+      },
+      {
+        title: 'Uncontrolled',
+        body: 'Pass defaultValue and read the number off onValueChange. Arrows, Home/End and drag all work natively.',
+        file: 'settings.tsx',
+        code: '<Slider defaultValue={40} onValueChange={setVolume} aria-label="Volume" />',
+      },
+      {
+        title: 'Controlled with a custom range',
+        body: 'Own the value with value, and set min/max/step for any scale.',
+        file: 'mixer.tsx',
+        code: '<Slider value={vol} onValueChange={setVol} min={0} max={11} step={1} aria-label="Volume" />',
+      },
+    ],
+    propsTitle: 'Props',
+    propsIntro:
+      'Forwards every native <input> attribute (except type/value/defaultValue/onChange). The extras:',
+    col0: 'Prop',
+    props: [
+      { name: 'value', type: 'number', desc: 'Controlled value. Omit to run uncontrolled.' },
+      {
+        name: 'defaultValue',
+        type: 'number',
+        desc: 'Initial value when uncontrolled. Default min.',
+      },
+      { name: 'min', type: 'number', desc: 'Minimum value. Default 0.' },
+      { name: 'max', type: 'number', desc: 'Maximum value. Default 100.' },
+      { name: 'step', type: 'number', desc: 'Step increment. Default 1.' },
+      {
+        name: 'onValueChange',
+        type: '(value: number) => void',
+        desc: 'Fires with the next numeric value as the thumb moves.',
+      },
+    ],
+    api: '<Slider defaultValue={40} aria-label="Volume" />\n<Slider value={vol} onValueChange={setVol} max={11} aria-label="Volume" />',
+    a11y: true,
+    a11yList: [
+      'Native <input type="range"> carries role=slider with aria-valuenow/min/max, so the value is announced.',
+      'Full keyboard control is native: arrows step, Home/End jump to the ends, PageUp/PageDown step larger.',
+      'Needs an accessible name (aria-label or aria-labelledby); shows a visible focus-visible ring.',
     ],
   },
   button: {

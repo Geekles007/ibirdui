@@ -12,6 +12,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@/lib/async-state': itemFile('async-state/files/async-state.ts'),
+      '@/lib/block-motion': itemFile('block-motion/files/block-motion.tsx'),
       '@/hooks/use-async': itemFile('use-async/files/use-async.ts'),
       '@/hooks/use-online': itemFile('use-online/files/use-online.ts'),
       '@/hooks/use-optimistic-list': itemFile('use-optimistic-list/files/use-optimistic-list.ts'),
@@ -37,6 +38,7 @@ export default defineConfig({
       '@/components/select': itemFile('select/files/select.tsx'),
       '@/components/alert': itemFile('alert/files/alert.tsx'),
       '@/components/progress': itemFile('progress/files/progress.tsx'),
+      '@/components/slider': itemFile('slider/files/slider.tsx'),
       '@/components/multi-select': itemFile('multi-select/files/multi-select.tsx'),
       '@/components/tag-input': itemFile('tag-input/files/tag-input.tsx'),
       '@/components/date-picker': itemFile('date-picker/files/date-picker.tsx'),
