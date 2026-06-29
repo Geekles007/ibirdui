@@ -1,0 +1,36 @@
+{
+  "name": "checkbox",
+  "type": "component",
+  "version": "1.0.0",
+  "description": "The checkbox primitive: a native <input type=\"checkbox\"> with the themed look and a visible focus ring. Native on purpose — in the tab order, toggles on Space, reports checked/indeterminate to assistive tech with no ARIA wiring. Carries no label; pair it with field or a wrapping label.",
+  "states": [],
+  "a11y": {
+    "level": "AA",
+    "tested": true,
+    "notes": [
+      "A native checkbox — focusable, Space-toggled and announced with its checked state with no extra wiring",
+      "Shows a visible focus-visible ring for keyboard users",
+      "Needs a label via field, a wrapping <label>, or aria-label"
+    ]
+  },
+  "manifest": {
+    "intents": [
+      "a checkbox / boolean toggle in a form",
+      "an accept-terms or opt-in checkbox",
+      "a single boolean field control"
+    ],
+    "examples": [
+      "<label className=\"flex items-center gap-2\"><Checkbox name=\"terms\" /> Accept the terms</label>"
+    ]
+  },
+  "dependencies": ["react"],
+  "devDependencies": [],
+  "registryDependencies": [],
+  "files": [
+    {
+      "from": "files/checkbox.tsx",
+      "path": "components/checkbox.tsx",
+      "type": "component"
+    }
+  ]
+}

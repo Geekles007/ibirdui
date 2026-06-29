@@ -1,0 +1,36 @@
+{
+  "name": "select",
+  "type": "component",
+  "version": "1.0.0",
+  "description": "The single-select primitive: a native <select> with the themed look and a decorative chevron. Native on purpose — the OS renders the option list, so it works on touch, with the keyboard and with screen readers out of the box. Pass <option>s as children and pair with field. For an async type-ahead picker use async-combobox; for several values, multi-select.",
+  "states": [],
+  "a11y": {
+    "level": "AA",
+    "tested": true,
+    "notes": [
+      "A native <select>, so the listbox, keyboard navigation and announcements are the platform's — accessible with no ARIA wiring",
+      "The chevron is aria-hidden and never intercepts pointer events",
+      "Give it a label via field or htmlFor; reflects aria-invalid visually and shows a focus-visible ring"
+    ]
+  },
+  "manifest": {
+    "intents": [
+      "a single-select dropdown / native select",
+      "choose one option from a short fixed list",
+      "the control inside a field wrapper for a single choice"
+    ],
+    "examples": [
+      "<Select name=\"role\" defaultValue=\"member\"><option value=\"member\">Member</option><option value=\"admin\">Admin</option></Select>"
+    ]
+  },
+  "dependencies": ["react"],
+  "devDependencies": [],
+  "registryDependencies": [],
+  "files": [
+    {
+      "from": "files/select.tsx",
+      "path": "components/select.tsx",
+      "type": "component"
+    }
+  ]
+}

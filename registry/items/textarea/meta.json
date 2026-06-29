@@ -1,0 +1,37 @@
+{
+  "name": "textarea",
+  "type": "component",
+  "version": "1.0.0",
+  "description": "The themed multi-line text input: a native <textarea> with the look, a visible focus ring and a destructive border/ring on aria-invalid. Owns no label or error markup — pair it with field.",
+  "states": [],
+  "a11y": {
+    "level": "AA",
+    "tested": true,
+    "notes": [
+      "A native <textarea> — focusable and labellable by default; give it a label via field or htmlFor",
+      "Shows a visible focus-visible ring for keyboard users",
+      "Reflects aria-invalid visually (destructive border + ring)"
+    ]
+  },
+  "manifest": {
+    "intents": [
+      "a multi-line text input / textarea",
+      "a comment, bio or message field",
+      "the control inside a field wrapper for long text"
+    ],
+    "examples": [
+      "<Textarea rows={4} placeholder=\"Write a message…\" />",
+      "<Field label=\"Bio\" error={errors.bio}><Textarea name=\"bio\" /></Field>"
+    ]
+  },
+  "dependencies": ["react"],
+  "devDependencies": [],
+  "registryDependencies": [],
+  "files": [
+    {
+      "from": "files/textarea.tsx",
+      "path": "components/textarea.tsx",
+      "type": "component"
+    }
+  ]
+}

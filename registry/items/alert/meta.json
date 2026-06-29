@@ -1,0 +1,36 @@
+{
+  "name": "alert",
+  "type": "component",
+  "version": "1.0.0",
+  "description": "A static callout box (Alert, AlertTitle, AlertDescription) with default and destructive variants — an inline heads-up that's part of the page, not a transient toast and not an async error-with-retry. Sets no ARIA role by default so it never interrupts a screen reader; add role=alert or role=status yourself when it appears dynamically.",
+  "states": [],
+  "a11y": {
+    "level": "AA",
+    "tested": true,
+    "notes": [
+      "No role by default — a static callout shouldn't interrupt assistive tech; add role=alert (assertive) or role=status (polite) when it appears in response to an action",
+      "Variant colour is reinforced by the title/description text, never conveyed by colour alone",
+      "Title and description are plain text elements with no imposed heading level"
+    ]
+  },
+  "manifest": {
+    "intents": [
+      "a static alert / callout / notice box",
+      "an inline info or warning panel on a page",
+      "a heads-up message with a title and description"
+    ],
+    "examples": [
+      "<Alert variant=\"destructive\" role=\"alert\"><AlertTitle>Payment failed</AlertTitle><AlertDescription>Your card was declined.</AlertDescription></Alert>"
+    ]
+  },
+  "dependencies": ["react"],
+  "devDependencies": [],
+  "registryDependencies": [],
+  "files": [
+    {
+      "from": "files/alert.tsx",
+      "path": "components/alert.tsx",
+      "type": "component"
+    }
+  ]
+}
