@@ -1,0 +1,37 @@
+{
+  "name": "input",
+  "type": "component",
+  "version": "1.0.0",
+  "description": "The themed text input primitive: a native <input> with the look, a visible focus ring and a destructive border/ring when aria-invalid is set. Carries no label or error markup of its own — pair it with field, which injects id, aria-describedby, aria-invalid and aria-required.",
+  "states": [],
+  "a11y": {
+    "level": "AA",
+    "tested": true,
+    "notes": [
+      "A native <input>, so it's focusable and labellable by default — give it a label via field or htmlFor",
+      "Shows a visible focus-visible ring for keyboard users",
+      "Reflects aria-invalid visually (destructive border + ring), so error state isn't conveyed by colour alone of an unrelated element"
+    ]
+  },
+  "manifest": {
+    "intents": [
+      "a styled text input / text field",
+      "an email, password, search or number input",
+      "the control inside a field wrapper"
+    ],
+    "examples": [
+      "<Input type=\"email\" placeholder=\"you@work.com\" />",
+      "<Field label=\"Email\" error={errors.email}><Input type=\"email\" /></Field>"
+    ]
+  },
+  "dependencies": ["react"],
+  "devDependencies": [],
+  "registryDependencies": [],
+  "files": [
+    {
+      "from": "files/input.tsx",
+      "path": "components/input.tsx",
+      "type": "component"
+    }
+  ]
+}

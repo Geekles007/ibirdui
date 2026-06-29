@@ -32,6 +32,11 @@ export const components: Comp[] = [
   { name: 'use-optimistic-list', layer: 0, status: 'done', kind: 'hook', a11y: false },
   { name: 'use-online', layer: 0, status: 'done', kind: 'hook', a11y: false },
   { name: 'skeleton', layer: 0, status: 'done', kind: 'component', a11y: true },
+  { name: 'button', layer: 0, status: 'done', kind: 'component', a11y: true },
+  { name: 'card', layer: 0, status: 'done', kind: 'component', a11y: true },
+  { name: 'badge', layer: 0, status: 'done', kind: 'component', a11y: true },
+  { name: 'input', layer: 0, status: 'done', kind: 'component', a11y: true },
+  { name: 'separator', layer: 0, status: 'done', kind: 'component', a11y: true },
   { name: 'state-boundary', layer: 1, status: 'done', kind: 'component', a11y: true },
   { name: 'empty-state', layer: 1, status: 'done', kind: 'component', a11y: true },
   { name: 'error-state', layer: 1, status: 'done', kind: 'component', a11y: true },
@@ -113,6 +118,65 @@ export interface Doc {
 }
 
 export const docs: Record<string, Doc> = {
+  button: {
+    intro:
+      'The plain button primitive — themed variants and sizes over a native <button>, with a visible focus ring. For an action that runs a promise (spinner, disabled-while-pending, announced result), reach for async-button instead.',
+    apiFile: 'components/button.tsx',
+    api: '<Button>Save</Button>\n<Button variant="outline" size="sm">Cancel</Button>\n<Button variant="destructive">Delete</Button>\n\n// reuse the look on a link\n<a href="/x" className={buttonClasses({ variant: "outline" })}>Go</a>',
+    a11y: true,
+    a11yList: [
+      'A native <button> — focusable, Enter/Space activated and announced as a button with no extra wiring.',
+      'Shows a visible focus-visible ring for keyboard users.',
+      'disabled removes pointer events and is conveyed to assistive tech via the native attribute.',
+    ],
+  },
+  card: {
+    intro:
+      'A surface container and its parts (Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter). Pure layout primitives with no imposed roles, so they compose into stat tiles, panels, list items and dashboard cards.',
+    apiFile: 'components/card.tsx',
+    api: '<Card>\n  <CardHeader>\n    <CardTitle>Monthly revenue</CardTitle>\n    <CardDescription>Updated just now</CardDescription>\n  </CardHeader>\n  <CardContent>$48,210</CardContent>\n  <CardFooter>+12% vs last month</CardFooter>\n</Card>',
+    a11y: true,
+    a11yList: [
+      'Carries no role of its own — a styled container that never adds noise to the accessibility tree.',
+      'CardTitle is a div, not a heading, so a card never breaks the document heading order; wrap your own heading when the outline matters.',
+      'All parts forward refs and arbitrary props for composition.',
+    ],
+  },
+  badge: {
+    intro:
+      'A small status pill / label — a styled span with themed variants. Decorative by default: the text carries the meaning, with guidance to label colour-only status for assistive tech.',
+    apiFile: 'components/badge.tsx',
+    api: '<Badge>New</Badge>\n<Badge variant="secondary">Draft</Badge>\n<Badge variant="outline">Beta</Badge>\n<Badge variant="destructive" aria-label="Status: failed">Failed</Badge>',
+    a11y: true,
+    a11yList: [
+      'Renders inline text, so its label is read in place — no role needed.',
+      'When status is signalled by colour alone, the text or an aria-label must still convey it (never colour-only).',
+    ],
+  },
+  input: {
+    intro:
+      'The themed text input primitive — a native <input> with the look, a visible focus ring and a destructive border/ring when aria-invalid is set. It carries no label or error markup of its own: pair it with field, which injects id, aria-describedby, aria-invalid and aria-required.',
+    apiFile: 'components/input.tsx',
+    api: '<Input type="email" placeholder="you@work.com" />\n\n<Field label="Email" error={errors.email}>\n  <Input type="email" name="email" />\n</Field>',
+    a11y: true,
+    a11yList: [
+      'A native <input> — focusable and labellable by default; give it a label via field or htmlFor.',
+      'Shows a visible focus-visible ring for keyboard users.',
+      'Reflects aria-invalid visually (destructive border + ring), so error state is never conveyed by colour of an unrelated element.',
+    ],
+  },
+  separator: {
+    intro:
+      'A thin rule between content, horizontal or vertical. Decorative by default (aria-hidden, role=none) so it never pollutes the accessibility tree; pass decorative={false} when the rule genuinely separates two groups of meaning to expose role=separator with the right aria-orientation.',
+    apiFile: 'components/separator.tsx',
+    api: '<Separator />\n<Separator orientation="vertical" />\n<Separator decorative={false} />',
+    a11y: true,
+    a11yList: [
+      'Decorative by default: role=none + aria-hidden, so a purely visual divider adds nothing to the accessibility tree.',
+      'When meaningful (decorative={false}) it exposes role=separator with aria-orientation.',
+      'Never relies on colour alone to convey grouping.',
+    ],
+  },
   'async-state': {
     intro:
       'The contract at the centre of ibirdui. One discriminated union, AsyncState<T>, models the full lifecycle of any async value — so every component speaks the same five-state language.',
