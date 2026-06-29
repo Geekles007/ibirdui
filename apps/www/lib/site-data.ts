@@ -129,6 +129,48 @@ export const docs: Record<string, Doc> = {
     intro:
       'The checkbox primitive — a native <input type="checkbox"> with the themed look and a visible focus ring. Native on purpose: it tabs, toggles on Space and reports its state to assistive tech with no ARIA. Pair it with field or a wrapping label.',
     apiFile: 'components/checkbox.tsx',
+    tutorialIntro:
+      'Checkbox is a themed native checkbox. Give it a label via a wrapping <label> or field.',
+    tutorial: [
+      {
+        title: 'Install',
+        body: 'Copies the component plus its axe test into your repo.',
+        file: 'terminal',
+        code: '$ npx ibirdui add checkbox\n✓ wrote components/checkbox.tsx\n✓ wrote components/checkbox.test.tsx',
+      },
+      {
+        title: 'Label it',
+        body: 'A wrapping label makes the whole row clickable and gives the checkbox its name.',
+        file: 'terms.tsx',
+        code: '<label className="flex items-center gap-2">\n  <Checkbox name="terms" /> Accept the terms\n</label>',
+      },
+      {
+        title: 'Wire it to form state',
+        body: 'It is a native checkbox, so controlled/uncontrolled work exactly as you expect.',
+        file: 'terms.tsx',
+        code: '<Checkbox checked={agreed} onChange={(e) => setAgreed(e.target.checked)} />',
+      },
+    ],
+    propsTitle: 'Props',
+    propsIntro: 'Forwards every native checkbox attribute. Notable:',
+    col0: 'Prop',
+    props: [
+      {
+        name: 'checked / defaultChecked',
+        type: 'boolean',
+        desc: 'Controlled or initial checked state.',
+      },
+      {
+        name: 'onChange',
+        type: '(e) => void',
+        desc: 'Native change event; read e.target.checked.',
+      },
+      {
+        name: '…inputProps',
+        type: 'InputHTMLAttributes',
+        desc: 'name, disabled, required, aria-* — all forwarded.',
+      },
+    ],
     api: '<label className="flex items-center gap-2">\n  <Checkbox name="terms" /> Accept the terms\n</label>',
     a11y: true,
     a11yList: [
@@ -141,6 +183,45 @@ export const docs: Record<string, Doc> = {
     intro:
       'A settings toggle following the ARIA switch pattern: a <button role="switch"> with aria-checked, toggled by click and Space/Enter. Works controlled or uncontrolled. The synchronous switch — for a server-committed toggle that rolls back on failure, use optimistic-toggle.',
     apiFile: 'components/switch.tsx',
+    tutorialIntro:
+      'Switch is the ARIA switch pattern on a button. Use it for synchronous settings; use optimistic-toggle when the change commits to a server.',
+    tutorial: [
+      {
+        title: 'Install',
+        body: 'Copies the component plus its axe test into your repo.',
+        file: 'terminal',
+        code: '$ npx ibirdui add switch\n✓ wrote components/switch.tsx\n✓ wrote components/switch.test.tsx',
+      },
+      {
+        title: 'Uncontrolled with a label',
+        body: 'defaultChecked seeds the state; onCheckedChange reports each toggle. Always give it a name.',
+        file: 'settings.tsx',
+        code: '<Switch defaultChecked aria-label="Email notifications"\n  onCheckedChange={(on) => save({ emails: on })} />',
+      },
+      {
+        title: 'Controlled',
+        body: 'Pass checked and own the value in your state — the switch reflects whatever you give it.',
+        file: 'settings.tsx',
+        code: '<Switch checked={dark} onCheckedChange={setDark} aria-label="Dark mode" />',
+      },
+    ],
+    propsTitle: 'Props',
+    propsIntro: 'Forwards button attributes (minus onChange/value). The extras:',
+    col0: 'Prop',
+    props: [
+      { name: 'checked', type: 'boolean', desc: 'Controlled on/off state.' },
+      {
+        name: 'defaultChecked',
+        type: 'boolean',
+        desc: 'Initial state when uncontrolled. Default false.',
+      },
+      {
+        name: 'onCheckedChange',
+        type: '(checked: boolean) => void',
+        desc: 'Fires with the next value on toggle.',
+      },
+      { name: 'disabled', type: 'boolean', desc: 'Blocks toggling and dims the control.' },
+    ],
     api: '<Switch defaultChecked aria-label="Email notifications" />\n<Switch checked={on} onCheckedChange={setOn} aria-label="Dark mode" />',
     a11y: true,
     a11yList: [
@@ -153,6 +234,45 @@ export const docs: Record<string, Doc> = {
     intro:
       'A single-choice group: RadioGroup (role=radiogroup) plus Radio items that are native radios sharing one name, so the browser gives arrow-key navigation and single-selection for free. Controlled via value + onValueChange.',
     apiFile: 'components/radio-group.tsx',
+    tutorialIntro:
+      'RadioGroup wraps native radios that share one name, so the browser handles arrow-key navigation and single-selection.',
+    tutorial: [
+      {
+        title: 'Install',
+        body: 'Copies the component plus its axe test into your repo.',
+        file: 'terminal',
+        code: '$ npx ibirdui add radio-group\n✓ wrote components/radio-group.tsx\n✓ wrote components/radio-group.test.tsx',
+      },
+      {
+        title: 'Build the group',
+        body: 'Label the group, then list options. Each Radio only needs its value; pair it with a label.',
+        file: 'plan.tsx',
+        code: '<RadioGroup value={plan} onValueChange={setPlan} aria-label="Plan">\n  <label><Radio value="free" /> Free</label>\n  <label><Radio value="pro" /> Pro</label>\n</RadioGroup>',
+      },
+      {
+        title: 'Read the selection',
+        body: 'onValueChange fires with the chosen value; the group reflects the value you pass back.',
+        file: 'plan.tsx',
+        code: 'const [plan, setPlan] = useState("free");\n// plan is always the selected option',
+      },
+    ],
+    propsTitle: 'Props',
+    propsIntro: 'RadioGroup is the container; Radio is each option.',
+    col0: 'Prop',
+    props: [
+      { name: 'RadioGroup.value', type: 'string', desc: 'Controlled selected value.' },
+      {
+        name: 'RadioGroup.onValueChange',
+        type: '(value: string) => void',
+        desc: 'Fires with the newly selected value.',
+      },
+      {
+        name: 'RadioGroup.name',
+        type: 'string',
+        desc: 'Shared input name. Auto-generated if omitted.',
+      },
+      { name: 'Radio.value', type: 'string', desc: 'This option’s value (required).' },
+    ],
     api: '<RadioGroup value={plan} onValueChange={setPlan} aria-label="Plan">\n  <label><Radio value="free" /> Free</label>\n  <label><Radio value="pro" /> Pro</label>\n</RadioGroup>',
     a11y: true,
     a11yList: [
@@ -165,6 +285,44 @@ export const docs: Record<string, Doc> = {
     intro:
       'The themed multi-line text input — a native <textarea> with the look, a visible focus ring and a destructive border/ring on aria-invalid. Owns no label or error markup: pair it with field.',
     apiFile: 'components/textarea.tsx',
+    tutorialIntro:
+      'Textarea is the multi-line sibling of input — same theming and aria-invalid behaviour. Pair it with field.',
+    tutorial: [
+      {
+        title: 'Install',
+        body: 'Copies the component plus its axe test into your repo.',
+        file: 'terminal',
+        code: '$ npx ibirdui add textarea\n✓ wrote components/textarea.tsx\n✓ wrote components/textarea.test.tsx',
+      },
+      {
+        title: 'Wrap it in a field',
+        body: 'field provides the label and wires the accessibility, exactly as with input.',
+        file: 'profile.tsx',
+        code: '<Field label="Bio" error={errors.bio}>\n  <Textarea name="bio" rows={4} />\n</Field>',
+      },
+      {
+        title: 'Size it',
+        body: 'It starts at a sensible min-height; rows and className tune the rest.',
+        file: 'profile.tsx',
+        code: '<Textarea rows={6} className="resize-none" placeholder="Write a message…" />',
+      },
+    ],
+    propsTitle: 'Props',
+    propsIntro: 'Forwards every native <textarea> attribute. Notable:',
+    col0: 'Prop',
+    props: [
+      { name: 'rows', type: 'number', desc: 'Visible line count; min-height also applies.' },
+      {
+        name: 'aria-invalid',
+        type: 'boolean',
+        desc: 'When true, shows a destructive border and ring.',
+      },
+      {
+        name: '…textareaProps',
+        type: 'TextareaHTMLAttributes',
+        desc: 'value, onChange, placeholder, disabled, name — all forwarded.',
+      },
+    ],
     api: '<Field label="Bio" error={errors.bio}>\n  <Textarea name="bio" rows={4} />\n</Field>',
     a11y: true,
     a11yList: [
@@ -177,6 +335,43 @@ export const docs: Record<string, Doc> = {
     intro:
       'The single-select primitive — a native <select> with the themed look and a decorative chevron. Native on purpose: the OS renders the list, so it works on touch, keyboard and screen readers out of the box. For an async type-ahead picker use async-combobox; for several values, multi-select.',
     apiFile: 'components/select.tsx',
+    tutorialIntro:
+      'Select is a themed native <select>. The OS renders the option list, so it just works everywhere. Pair it with field.',
+    tutorial: [
+      {
+        title: 'Install',
+        body: 'Copies the component plus its axe test into your repo.',
+        file: 'terminal',
+        code: '$ npx ibirdui add select\n✓ wrote components/select.tsx\n✓ wrote components/select.test.tsx',
+      },
+      {
+        title: 'Pass options as children',
+        body: 'Plain <option> elements — the native control handles everything else.',
+        file: 'role.tsx',
+        code: '<Field label="Role">\n  <Select name="role" defaultValue="member">\n    <option value="member">Member</option>\n    <option value="admin">Admin</option>\n  </Select>\n</Field>',
+      },
+      {
+        title: 'Know when to reach for more',
+        body: 'Use async-combobox for a type-ahead picker that fetches, or multi-select for several values.',
+        file: 'note.txt',
+        code: 'select        → one value, short fixed list\nasync-combobox → type-ahead, fetched options\nmulti-select   → several values',
+      },
+    ],
+    propsTitle: 'Props',
+    propsIntro: 'Forwards every native <select> attribute. The extra:',
+    col0: 'Prop',
+    props: [
+      {
+        name: 'wrapperClassName',
+        type: 'string',
+        desc: 'Class for the relative wrapper that positions the chevron.',
+      },
+      {
+        name: '…selectProps',
+        type: 'SelectHTMLAttributes',
+        desc: 'value, defaultValue, onChange, disabled, name — all forwarded to the <select>.',
+      },
+    ],
     api: '<Field label="Role">\n  <Select name="role" defaultValue="member">\n    <option value="member">Member</option>\n    <option value="admin">Admin</option>\n  </Select>\n</Field>',
     a11y: true,
     a11yList: [
@@ -189,6 +384,48 @@ export const docs: Record<string, Doc> = {
     intro:
       'A static callout box (Alert, AlertTitle, AlertDescription) with default and destructive variants — an inline heads-up that’s part of the page, not a transient toast and not an async error-with-retry. Sets no ARIA role by default; add role=alert or role=status when it appears dynamically.',
     apiFile: 'components/alert.tsx',
+    tutorialIntro:
+      'Alert is a static callout. It sets no role by default — you decide whether it should be announced.',
+    tutorial: [
+      {
+        title: 'Install',
+        body: 'Copies the component plus its axe test into your repo.',
+        file: 'terminal',
+        code: '$ npx ibirdui add alert\n✓ wrote components/alert.tsx\n✓ wrote components/alert.test.tsx',
+      },
+      {
+        title: 'A static notice',
+        body: 'Part of the page, present on load — no role, so it never interrupts a screen reader.',
+        file: 'page.tsx',
+        code: '<Alert>\n  <AlertTitle>Heads up</AlertTitle>\n  <AlertDescription>Your trial ends in 3 days.</AlertDescription>\n</Alert>',
+      },
+      {
+        title: 'Announce it when it appears',
+        body: 'When the alert shows in response to an action, add role="alert" (assertive) or role="status" (polite).',
+        file: 'checkout.tsx',
+        code: '<Alert variant="destructive" role="alert">\n  <AlertTitle>Payment failed</AlertTitle>\n  <AlertDescription>Your card was declined.</AlertDescription>\n</Alert>',
+      },
+    ],
+    propsTitle: 'Props',
+    propsIntro: 'Alert is the container; title and description are plain text parts.',
+    col0: 'Prop',
+    props: [
+      {
+        name: 'variant',
+        type: '"default" | "destructive"',
+        desc: 'Visual style. Default "default".',
+      },
+      {
+        name: 'role',
+        type: '"alert" | "status" | …',
+        desc: 'None by default; set it when the alert appears dynamically.',
+      },
+      {
+        name: 'AlertTitle / AlertDescription',
+        type: 'div / p',
+        desc: 'Heading-less title and supporting text.',
+      },
+    ],
     api: '<Alert variant="destructive" role="alert">\n  <AlertTitle>Payment failed</AlertTitle>\n  <AlertDescription>Your card was declined.</AlertDescription>\n</Alert>',
     a11y: true,
     a11yList: [
@@ -201,6 +438,40 @@ export const docs: Record<string, Doc> = {
     intro:
       'A progress bar following the ARIA progressbar pattern. Pass value (and optionally max) for a determinate bar; omit value for an indeterminate one (no aria-valuenow, sliding animation that respects prefers-reduced-motion). Name it via label/aria-label.',
     apiFile: 'components/progress.tsx',
+    tutorialIntro:
+      'Progress is the ARIA progressbar pattern. Give it a value for determinate progress, or omit it for an indeterminate bar.',
+    tutorial: [
+      {
+        title: 'Install',
+        body: 'Copies the component plus its axe test into your repo.',
+        file: 'terminal',
+        code: '$ npx ibirdui add progress\n✓ wrote components/progress.tsx\n✓ wrote components/progress.test.tsx',
+      },
+      {
+        title: 'Determinate',
+        body: 'Pass value (0–max). It sets aria-valuenow/min/max, so assistive tech reads the percentage.',
+        file: 'upload.tsx',
+        code: '<Progress value={uploaded} max={total} label="Upload" />',
+      },
+      {
+        title: 'Indeterminate',
+        body: 'Omit value for an in-flight task of unknown length: no aria-valuenow, plus a motion-reduce-safe slide.',
+        file: 'sync.tsx',
+        code: '<Progress label="Syncing…" />',
+      },
+    ],
+    propsTitle: 'Props',
+    propsIntro: 'Forwards every native <div> attribute (except role). The extras:',
+    col0: 'Prop',
+    props: [
+      { name: 'value', type: 'number', desc: 'Current value. Omit for an indeterminate bar.' },
+      { name: 'max', type: 'number', desc: 'Maximum value. Default 100.' },
+      {
+        name: 'label',
+        type: 'string',
+        desc: 'Accessible name when no visible label points at the bar.',
+      },
+    ],
     api: '<Progress value={72} label="Upload" />\n<Progress label="Loading" />   // indeterminate',
     a11y: true,
     a11yList: [
@@ -213,6 +484,48 @@ export const docs: Record<string, Doc> = {
     intro:
       'The plain button primitive — themed variants and sizes over a native <button>, with a visible focus ring. For an action that runs a promise (spinner, disabled-while-pending, announced result), reach for async-button instead.',
     apiFile: 'components/button.tsx',
+    tutorialIntro:
+      'Button is a native <button> with themed variants and sizes. Reach for async-button when the click runs a promise.',
+    tutorial: [
+      {
+        title: 'Install',
+        body: 'Copies the component plus its axe test into your repo. You own both.',
+        file: 'terminal',
+        code: '$ npx ibirdui add button\n✓ wrote components/button.tsx\n✓ wrote components/button.test.tsx',
+      },
+      {
+        title: 'Pick a variant and size',
+        body: 'Six variants and four sizes cover the usual hierarchy of actions on a screen.',
+        file: 'toolbar.tsx',
+        code: '<Button>Save</Button>\n<Button variant="outline" size="sm">Cancel</Button>\n<Button variant="destructive">Delete</Button>',
+      },
+      {
+        title: 'Reuse the look on a link',
+        body: 'buttonClasses() returns the class string, so an <a> (or any element) can look like a button without being one.',
+        file: 'nav.tsx',
+        code: '<a href="/new" className={buttonClasses({ variant: "outline" })}>\n  New project\n</a>',
+      },
+    ],
+    propsTitle: 'Props',
+    propsIntro: 'Forwards every native <button> attribute. The extras:',
+    col0: 'Prop',
+    props: [
+      {
+        name: 'variant',
+        type: '"default" | "secondary" | "outline" | "ghost" | "destructive" | "link"',
+        desc: 'Visual style. Default "default".',
+      },
+      {
+        name: 'size',
+        type: '"sm" | "md" | "lg" | "icon"',
+        desc: 'Height and padding; "icon" is square. Default "md".',
+      },
+      {
+        name: '…buttonProps',
+        type: 'ButtonHTMLAttributes',
+        desc: 'onClick, disabled, type (defaults to "button"), aria-* — all forwarded.',
+      },
+    ],
     api: '<Button>Save</Button>\n<Button variant="outline" size="sm">Cancel</Button>\n<Button variant="destructive">Delete</Button>\n\n// reuse the look on a link\n<a href="/x" className={buttonClasses({ variant: "outline" })}>Go</a>',
     a11y: true,
     a11yList: [
@@ -225,6 +538,47 @@ export const docs: Record<string, Doc> = {
     intro:
       'A surface container and its parts (Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter). Pure layout primitives with no imposed roles, so they compose into stat tiles, panels, list items and dashboard cards.',
     apiFile: 'components/card.tsx',
+    tutorialIntro:
+      'Card and its parts are styling-only containers. Compose the parts you need — they impose no roles or semantics.',
+    tutorial: [
+      {
+        title: 'Install',
+        body: 'Copies the component plus its axe test into your repo.',
+        file: 'terminal',
+        code: '$ npx ibirdui add card\n✓ wrote components/card.tsx\n✓ wrote components/card.test.tsx',
+      },
+      {
+        title: 'Compose a card',
+        body: 'Mix header, content and footer freely. Every part forwards className and refs.',
+        file: 'revenue.tsx',
+        code: '<Card>\n  <CardHeader>\n    <CardTitle>Monthly revenue</CardTitle>\n    <CardDescription>Updated just now</CardDescription>\n  </CardHeader>\n  <CardContent>$48,210</CardContent>\n  <CardFooter>+12% vs last month</CardFooter>\n</Card>',
+      },
+      {
+        title: 'Add your own heading when it matters',
+        body: 'CardTitle is a div, so it never forces a heading level. Wrap it in a real heading when the card belongs in the document outline.',
+        file: 'section.tsx',
+        code: '<CardHeader>\n  <h2><CardTitle>Team</CardTitle></h2>\n</CardHeader>',
+      },
+    ],
+    propsTitle: 'Parts',
+    propsIntro: 'Six components; each forwards its native element’s attributes and ref.',
+    col0: 'Component',
+    props: [
+      { name: 'Card', type: 'div', desc: 'The bordered surface. Rounded, subtle shadow.' },
+      {
+        name: 'CardHeader',
+        type: 'div',
+        desc: 'Top block; stacks title and description with spacing.',
+      },
+      {
+        name: 'CardTitle',
+        type: 'div',
+        desc: 'Emphasised title — a div, not a heading, so it imposes no level.',
+      },
+      { name: 'CardDescription', type: 'p', desc: 'Muted supporting line under the title.' },
+      { name: 'CardContent', type: 'div', desc: 'The body region.' },
+      { name: 'CardFooter', type: 'div', desc: 'Bottom row, for actions or meta.' },
+    ],
     api: '<Card>\n  <CardHeader>\n    <CardTitle>Monthly revenue</CardTitle>\n    <CardDescription>Updated just now</CardDescription>\n  </CardHeader>\n  <CardContent>$48,210</CardContent>\n  <CardFooter>+12% vs last month</CardFooter>\n</Card>',
     a11y: true,
     a11yList: [
@@ -237,6 +591,43 @@ export const docs: Record<string, Doc> = {
     intro:
       'A small status pill / label — a styled span with themed variants. Decorative by default: the text carries the meaning, with guidance to label colour-only status for assistive tech.',
     apiFile: 'components/badge.tsx',
+    tutorialIntro:
+      'Badge is a styled inline span. The text carries the meaning, so colour is never the only signal.',
+    tutorial: [
+      {
+        title: 'Install',
+        body: 'Copies the component plus its axe test into your repo.',
+        file: 'terminal',
+        code: '$ npx ibirdui add badge\n✓ wrote components/badge.tsx\n✓ wrote components/badge.test.tsx',
+      },
+      {
+        title: 'Label a status',
+        body: 'Four variants map to the theme. Keep the label meaningful on its own.',
+        file: 'row.tsx',
+        code: '<Badge>New</Badge>\n<Badge variant="secondary">Draft</Badge>\n<Badge variant="destructive">Failed</Badge>',
+      },
+      {
+        title: 'Name colour-only status',
+        body: 'When the colour is the message, add an aria-label so it is not lost to screen readers.',
+        file: 'build.tsx',
+        code: '<Badge variant="destructive" aria-label="Build status: failed">\n  ✕\n</Badge>',
+      },
+    ],
+    propsTitle: 'Props',
+    propsIntro: 'Forwards every native <span> attribute. The extra:',
+    col0: 'Prop',
+    props: [
+      {
+        name: 'variant',
+        type: '"default" | "secondary" | "outline" | "destructive"',
+        desc: 'Visual style. Default "default".',
+      },
+      {
+        name: '…spanProps',
+        type: 'HTMLAttributes<HTMLSpanElement>',
+        desc: 'className, aria-label, data-* — all forwarded.',
+      },
+    ],
     api: '<Badge>New</Badge>\n<Badge variant="secondary">Draft</Badge>\n<Badge variant="outline">Beta</Badge>\n<Badge variant="destructive" aria-label="Status: failed">Failed</Badge>',
     a11y: true,
     a11yList: [
@@ -248,6 +639,44 @@ export const docs: Record<string, Doc> = {
     intro:
       'The themed text input primitive — a native <input> with the look, a visible focus ring and a destructive border/ring when aria-invalid is set. It carries no label or error markup of its own: pair it with field, which injects id, aria-describedby, aria-invalid and aria-required.',
     apiFile: 'components/input.tsx',
+    tutorialIntro:
+      'Input is a themed native <input>. It owns no label — field wires the accessibility for you.',
+    tutorial: [
+      {
+        title: 'Install',
+        body: 'Copies the component plus its axe test into your repo.',
+        file: 'terminal',
+        code: '$ npx ibirdui add input\n✓ wrote components/input.tsx\n✓ wrote components/input.test.tsx',
+      },
+      {
+        title: 'Wrap it in a field',
+        body: 'field injects id, aria-describedby, aria-invalid and aria-required onto the input.',
+        file: 'signup.tsx',
+        code: '<Field label="Email" error={errors.email}>\n  <Input type="email" name="email" />\n</Field>',
+      },
+      {
+        title: 'Error state is visible, not just announced',
+        body: 'When aria-invalid is set (field does this on error), the border and ring turn destructive.',
+        file: 'signup.tsx',
+        code: '<Input aria-invalid />   // destructive border + ring',
+      },
+    ],
+    propsTitle: 'Props',
+    propsIntro: 'Forwards every native <input> attribute. Notable:',
+    col0: 'Prop',
+    props: [
+      { name: 'type', type: 'string', desc: 'Any input type. Default "text".' },
+      {
+        name: 'aria-invalid',
+        type: 'boolean',
+        desc: 'When true, the input shows a destructive border and ring. field sets it on error.',
+      },
+      {
+        name: '…inputProps',
+        type: 'InputHTMLAttributes',
+        desc: 'value, onChange, placeholder, disabled, name — all forwarded.',
+      },
+    ],
     api: '<Input type="email" placeholder="you@work.com" />\n\n<Field label="Email" error={errors.email}>\n  <Input type="email" name="email" />\n</Field>',
     a11y: true,
     a11yList: [
@@ -260,6 +689,43 @@ export const docs: Record<string, Doc> = {
     intro:
       'A thin rule between content, horizontal or vertical. Decorative by default (aria-hidden, role=none) so it never pollutes the accessibility tree; pass decorative={false} when the rule genuinely separates two groups of meaning to expose role=separator with the right aria-orientation.',
     apiFile: 'components/separator.tsx',
+    tutorialIntro:
+      'Separator is a one-pixel rule. Decorative by default; make it meaningful only when it separates real groups.',
+    tutorial: [
+      {
+        title: 'Install',
+        body: 'Copies the component plus its axe test into your repo.',
+        file: 'terminal',
+        code: '$ npx ibirdui add separator\n✓ wrote components/separator.tsx\n✓ wrote components/separator.test.tsx',
+      },
+      {
+        title: 'Split content',
+        body: 'Horizontal by default. Use vertical inside a flex row.',
+        file: 'toolbar.tsx',
+        code: '<div className="flex h-5 items-center gap-3">\n  <span>Edit</span>\n  <Separator orientation="vertical" />\n  <span>Share</span>\n</div>',
+      },
+      {
+        title: 'Make it meaningful',
+        body: 'When the rule genuinely divides two groups, expose it so screen readers announce the boundary.',
+        file: 'menu.tsx',
+        code: '<Separator decorative={false} />   // role="separator"',
+      },
+    ],
+    propsTitle: 'Props',
+    propsIntro: 'Forwards every native <div> attribute. The extras:',
+    col0: 'Prop',
+    props: [
+      {
+        name: 'orientation',
+        type: '"horizontal" | "vertical"',
+        desc: 'Visual and (when meaningful) semantic orientation. Default "horizontal".',
+      },
+      {
+        name: 'decorative',
+        type: 'boolean',
+        desc: 'When true (default) the rule is aria-hidden; false exposes role="separator".',
+      },
+    ],
     api: '<Separator />\n<Separator orientation="vertical" />\n<Separator decorative={false} />',
     a11y: true,
     a11yList: [
