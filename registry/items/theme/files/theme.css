@@ -3,19 +3,37 @@
  *
  * Import this once (e.g. in your global stylesheet) and pair it with the Tailwind
  * preset so utilities like `bg-background`, `text-muted-foreground`,
- * `border-border` and `bg-primary` resolve. Toggle dark mode by setting
- * `data-theme="dark"` (or the `.dark` class) on <html>.
+ * `border-border`, `bg-card` and `bg-primary` resolve. Toggle dark mode by
+ * setting `data-theme="dark"` (or the `.dark` class) on <html>.
  *
  * Values are HSL channels so Tailwind can compose them with opacity:
  *   background: hsl(var(--background))
+ *   ring:       hsl(var(--ring) / 0.5)   →  focus-visible:ring-ring/50
+ *
+ * The palette is a neutral zinc scale with a single lime accent (`--primary`).
+ * `secondary`/`accent` are the quiet interaction surfaces (hover fills, chips);
+ * `success`/`warning`/`destructive` are the status hues. `card`/`popover` are
+ * the raised surfaces — identical to the page in light, gently lifted in dark.
  */
 :root,
 [data-theme="light"] {
   --background: 0 0% 100%;
   --foreground: 240 10% 3.9%;
 
+  --card: 0 0% 100%;
+  --card-foreground: 240 10% 3.9%;
+
+  --popover: 0 0% 100%;
+  --popover-foreground: 240 10% 3.9%;
+
   --muted: 240 4.8% 95.9%;
   --muted-foreground: 240 3.8% 46.1%;
+
+  --secondary: 240 4.8% 95.9%;
+  --secondary-foreground: 240 5.9% 10%;
+
+  --accent: 240 4.8% 95.9%;
+  --accent-foreground: 240 5.9% 10%;
 
   --border: 240 5.9% 90%;
   --input: 240 5.9% 90%;
@@ -23,6 +41,12 @@
 
   --primary: 83 68% 40%;
   --primary-foreground: 80 60% 8%;
+
+  --success: 142 71% 40%;
+  --success-foreground: 0 0% 98%;
+
+  --warning: 38 92% 50%;
+  --warning-foreground: 48 96% 8%;
 
   --destructive: 0 72% 51%;
   --destructive-foreground: 0 0% 98%;
@@ -36,15 +60,33 @@
   --background: 240 10% 3.9%;
   --foreground: 0 0% 98%;
 
+  --card: 240 8% 7%;
+  --card-foreground: 0 0% 98%;
+
+  --popover: 240 8% 7%;
+  --popover-foreground: 0 0% 98%;
+
   --muted: 240 3.7% 15.9%;
   --muted-foreground: 240 5% 64.9%;
 
+  --secondary: 240 3.7% 15.9%;
+  --secondary-foreground: 0 0% 98%;
+
+  --accent: 240 3.7% 15.9%;
+  --accent-foreground: 0 0% 98%;
+
   --border: 240 3.7% 15.9%;
-  --input: 240 3.7% 15.9%;
+  --input: 240 3.7% 18%;
   --ring: 83 100% 59%;
 
   --primary: 83 100% 59%;
   --primary-foreground: 80 60% 8%;
+
+  --success: 142 69% 45%;
+  --success-foreground: 144 80% 6%;
+
+  --warning: 38 92% 50%;
+  --warning-foreground: 48 96% 8%;
 
   --destructive: 0 70% 55%;
   --destructive-foreground: 0 0% 98%;

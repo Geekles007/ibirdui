@@ -11,13 +11,13 @@ export type BadgeVariant = 'default' | 'secondary' | 'outline' | 'destructive';
 
 const VARIANTS: Record<BadgeVariant, string> = {
   default: 'border-transparent bg-primary text-primary-foreground',
-  secondary: 'border-transparent bg-muted text-muted-foreground',
+  secondary: 'border-transparent bg-secondary text-secondary-foreground',
   outline: 'border-border text-foreground',
   destructive: 'border-transparent bg-destructive text-destructive-foreground',
 };
 
 const BASE =
-  'inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-medium leading-none';
+  'inline-flex w-fit items-center gap-1 whitespace-nowrap rounded-full border px-2.5 py-0.5 text-xs font-medium leading-none';
 
 export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
   variant?: BadgeVariant;

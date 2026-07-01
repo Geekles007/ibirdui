@@ -87,12 +87,15 @@ export const fade: Variants = {
 
 /** Slide in from an edge, slide back out. For sheets, drawers and toasts. */
 export function slideIn(from: 'top' | 'bottom' | 'left' | 'right', distance = 24): Variants {
-  const axis = from === 'left' || from === 'right' ? 'x' : 'y';
+  const horizontal = from === 'left' || from === 'right';
   const offset = (from === 'left' || from === 'top' ? -1 : 1) * distance;
+  // Keep concrete x/y keys (a computed `[axis]` key would widen the variant to
+  // an index signature that no longer satisfies Framer Motion's `Variant` type).
+  const at = (value: number) => (horizontal ? { x: value } : { y: value });
   return {
-    hidden: { opacity: 0, [axis]: offset },
-    visible: { opacity: 1, [axis]: 0, transition: springs.smooth },
-    exit: { opacity: 0, [axis]: offset, transition: { duration: 0.15 } },
+    hidden: { opacity: 0, ...at(offset) },
+    visible: { opacity: 1, ...at(0), transition: springs.smooth },
+    exit: { opacity: 0, ...at(offset), transition: { duration: 0.15 } },
   };
 }
 

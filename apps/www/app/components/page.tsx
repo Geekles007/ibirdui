@@ -125,7 +125,7 @@ export default function ComponentsPage() {
   const demoTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   const [theme, setTheme] = useState<Theme>('dark');
-  const [selected, setSelected] = useState('data-list');
+  const [selected, setSelected] = useState('async-state');
   const [sideQuery, setSideQuery] = useState('');
   const [demoState, setDemoState] = useState<DemoState>('success');
   const [caseIdx, setCaseIdx] = useState(0);

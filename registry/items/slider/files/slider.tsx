@@ -54,7 +54,7 @@ export const Slider = React.forwardRef<HTMLInputElement, SliderProps>(function S
       defaultValue={value === undefined ? (defaultValue ?? min) : undefined}
       onChange={(e) => onValueChange?.(e.target.valueAsNumber)}
       className={cn(
-        'h-2 w-full cursor-pointer appearance-none rounded-full bg-muted accent-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-60',
+        'h-1.5 w-full cursor-pointer appearance-none rounded-full bg-muted accent-primary outline-none transition-[color,box-shadow] focus-visible:ring-ring/50 focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50',
         className,
       )}
       {...rest}

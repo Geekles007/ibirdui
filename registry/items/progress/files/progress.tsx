@@ -45,12 +45,12 @@ export const Progress = React.forwardRef<HTMLDivElement, ProgressProps>(function
       aria-valuemin={indeterminate ? undefined : 0}
       aria-valuemax={indeterminate ? undefined : max}
       aria-valuenow={indeterminate ? undefined : clamped}
-      className={cn('relative h-2 w-full overflow-hidden rounded-full bg-muted', className)}
+      className={cn('relative h-2 w-full overflow-hidden rounded-full bg-primary/20', className)}
       {...rest}
     >
       <div
         className={cn(
-          'h-full rounded-full bg-primary transition-[width]',
+          'h-full rounded-full bg-primary transition-[width] duration-500 ease-out',
           indeterminate && 'w-1/3 motion-safe:animate-[ibirdui-progress_1.2s_ease-in-out_infinite]',
         )}
         style={indeterminate ? undefined : { width: `${pct}%` }}
