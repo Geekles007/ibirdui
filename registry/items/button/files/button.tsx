@@ -10,33 +10,33 @@ function cn(...parts: Array<string | false | null | undefined>): string {
 export type ButtonVariant = 'default' | 'secondary' | 'outline' | 'ghost' | 'destructive' | 'link';
 export type ButtonSize = 'sm' | 'md' | 'lg' | 'icon';
 
-// Filled variants get a top inset highlight ("lit from above") plus a tactile
-// hover lift / active press. Quiet variants (outline/ghost/link) stay flat by
-// design so the primary action keeps the visual weight.
-const LIFT = 'hover:-translate-y-px active:translate-y-0';
-const FILLED_SHADOW =
-  'shadow-[0_1px_2px_0_rgb(0_0_0/0.28),inset_0_1px_0_0_rgb(255_255_255/0.13)] hover:shadow-[0_6px_16px_-4px_rgb(0_0_0/0.40),inset_0_1px_0_0_rgb(255_255_255/0.16)] active:shadow-[0_1px_2px_0_rgb(0_0_0/0.28)]';
-
+// Flat by design (shadcn-style): filled variants carry a hairline `shadow-xs`
+// and shift their fill on hover; quiet variants (outline/ghost) fill with the
+// neutral `accent` surface. No lifts, no insets — the accent colour and the
+// focus ring do the work.
 const VARIANTS: Record<ButtonVariant, string> = {
-  default: `bg-primary text-primary-foreground ${FILLED_SHADOW} ${LIFT}`,
-  secondary: `bg-muted text-foreground shadow-sm hover:bg-muted/70 ${LIFT}`,
-  outline: `border border-input bg-background text-foreground shadow-sm hover:bg-muted ${LIFT}`,
-  ghost: 'text-foreground hover:bg-muted active:bg-muted/80',
-  destructive: `bg-destructive text-destructive-foreground ${FILLED_SHADOW} ${LIFT}`,
+  default: 'bg-primary text-primary-foreground shadow-xs hover:bg-primary/90',
+  secondary: 'bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80',
+  outline:
+    'border border-input bg-background text-foreground shadow-xs hover:bg-accent hover:text-accent-foreground',
+  ghost: 'text-foreground hover:bg-accent hover:text-accent-foreground',
+  destructive:
+    'bg-destructive text-destructive-foreground shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/40',
   link: 'text-primary underline-offset-4 hover:underline',
 };
 
 const SIZES: Record<ButtonSize, string> = {
-  sm: 'h-8 gap-1.5 rounded-lg px-3 text-xs',
-  md: 'h-9 gap-2 rounded-lg px-4 text-sm',
-  lg: 'h-11 gap-2 rounded-lg px-6 text-[15px]',
-  icon: 'h-9 w-9 rounded-lg',
+  sm: 'h-8 gap-1.5 rounded-md px-3 text-xs',
+  md: 'h-9 gap-2 rounded-md px-4 text-sm',
+  lg: 'h-10 gap-2 rounded-md px-6 text-sm',
+  icon: 'h-9 w-9 rounded-md',
 };
 
-// transition-all so the hover shadow and active press animate, not just colour.
-// The focus ring sits on an offset so it reads clearly on any surface.
+// Only colour + box-shadow animate, so hover fills feel instant and there's no
+// layout movement. The soft 3px ring pairs with a `border-ring` shift — the
+// current shadcn focus treatment — so it reads clearly on any surface.
 const BASE =
-  'inline-flex shrink-0 items-center justify-center font-medium no-underline transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-60 disabled:shadow-none';
+  'inline-flex shrink-0 items-center justify-center font-medium no-underline transition-[color,box-shadow] outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] disabled:pointer-events-none disabled:opacity-50';
 
 /**
  * Compose the class string for a button-shaped element. Exposed so other items

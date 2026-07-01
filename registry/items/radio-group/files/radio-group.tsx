@@ -63,9 +63,11 @@ export interface RadioProps
 }
 
 /**
- * One option in a `RadioGroup` — a native `<input type="radio">` with the
- * themed look. Reads its name and selection from the group context, so you
- * only pass `value`. Pair each with a label (a wrapping `<label>` or `field`).
+ * One option in a `RadioGroup` — a native `<input type="radio">` styled to
+ * match the theme. Reads its name and selection from the group context, so you
+ * only pass `value`. `appearance-none` drops the OS look; the selected dot is a
+ * decorative overlay (`aria-hidden`) driven by the input's own `:checked`
+ * state. Pair each with a label (a wrapping `<label>` or `field`).
  */
 export const Radio = React.forwardRef<HTMLInputElement, RadioProps>(function Radio(
   { value, className, ...rest },
@@ -74,20 +76,23 @@ export const Radio = React.forwardRef<HTMLInputElement, RadioProps>(function Rad
   const ctx = React.useContext(Ctx);
   if (!ctx) throw new Error('<Radio> must be used inside a <RadioGroup>');
   return (
-    <input
-      ref={ref}
-      type="radio"
-      name={ctx.name}
-      value={value}
-      checked={ctx.value !== undefined ? ctx.value === value : undefined}
-      onChange={(e) => {
-        if (e.target.checked) ctx.onValueChange?.(value);
-      }}
-      className={cn(
-        'h-4 w-4 shrink-0 cursor-pointer border border-input accent-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-60',
-        className,
-      )}
-      {...rest}
-    />
+    <span className={cn('relative inline-flex h-4 w-4 shrink-0 align-middle', className)}>
+      <input
+        ref={ref}
+        type="radio"
+        name={ctx.name}
+        value={value}
+        checked={ctx.value !== undefined ? ctx.value === value : undefined}
+        onChange={(e) => {
+          if (e.target.checked) ctx.onValueChange?.(value);
+        }}
+        className="peer h-full w-full cursor-pointer appearance-none rounded-full border border-input bg-background shadow-xs outline-none transition-[color,box-shadow] checked:border-primary focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
+        {...rest}
+      />
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 m-auto h-1.5 w-1.5 scale-0 rounded-full bg-primary transition-transform peer-checked:scale-100"
+      />
+    </span>
   );
 });

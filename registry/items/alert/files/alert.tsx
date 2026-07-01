@@ -10,8 +10,9 @@ function cn(...parts: Array<string | false | null | undefined>): string {
 export type AlertVariant = 'default' | 'destructive';
 
 const VARIANTS: Record<AlertVariant, string> = {
-  default: 'border-border bg-background text-foreground',
-  destructive: 'border-destructive/50 bg-background text-destructive',
+  default: 'border-border bg-card text-card-foreground',
+  destructive:
+    'border-destructive/50 bg-card text-destructive [&_[data-slot=description]]:text-destructive/90',
 };
 
 export interface AlertProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -56,5 +57,12 @@ export const AlertDescription = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLParagraphElement>
 >(function AlertDescription({ className, ...props }, ref) {
-  return <p ref={ref} className={cn('text-sm opacity-90', className)} {...props} />;
+  return (
+    <p
+      ref={ref}
+      data-slot="description"
+      className={cn('text-sm text-muted-foreground', className)}
+      {...props}
+    />
+  );
 });
