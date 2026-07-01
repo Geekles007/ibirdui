@@ -32,7 +32,7 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(functi
       <input
         ref={ref}
         type="checkbox"
-        className="peer h-4 w-4 cursor-pointer appearance-none rounded-[4px] border border-input bg-background shadow-xs outline-none transition-[color,box-shadow] checked:border-primary checked:bg-primary indeterminate:border-primary indeterminate:bg-primary focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
+        className="peer h-4 w-4 shrink-0 cursor-pointer appearance-none rounded-[4px] border border-input bg-background shadow-xs outline-none transition-[color,box-shadow] checked:border-primary checked:bg-primary indeterminate:border-primary indeterminate:bg-primary focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
         {...rest}
       />
       {/* Checkmark — shown only when :checked (and not indeterminate). */}
