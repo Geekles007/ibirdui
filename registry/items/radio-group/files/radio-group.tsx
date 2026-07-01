@@ -86,7 +86,7 @@ export const Radio = React.forwardRef<HTMLInputElement, RadioProps>(function Rad
         onChange={(e) => {
           if (e.target.checked) ctx.onValueChange?.(value);
         }}
-        className="peer h-full w-full cursor-pointer appearance-none rounded-full border border-input bg-background shadow-xs outline-none transition-[color,box-shadow] checked:border-primary focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
+        className="peer h-4 w-4 cursor-pointer appearance-none rounded-full border border-input bg-background shadow-xs outline-none transition-[color,box-shadow] checked:border-primary focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
         {...rest}
       />
       <span
