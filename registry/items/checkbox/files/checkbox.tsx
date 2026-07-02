@@ -28,11 +28,19 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(functi
   ref,
 ) {
   return (
-    <span className={cn('relative inline-flex h-4 w-4 shrink-0 align-middle', className)}>
+    <span
+      className={cn(
+        // Grid-stack the box and its glyphs in one cell and center them. This
+        // does NOT rely on the SVG being display:block (which only a CSS reset
+        // guarantees), so the check/dash stay centered even without preflight.
+        'relative inline-grid h-4 w-4 shrink-0 place-items-center align-middle [&>*]:col-start-1 [&>*]:row-start-1',
+        className,
+      )}
+    >
       <input
         ref={ref}
         type="checkbox"
-        className="peer h-4 w-4 shrink-0 cursor-pointer appearance-none rounded-[4px] border border-input bg-background shadow-xs outline-none transition-[color,box-shadow] checked:border-primary checked:bg-primary indeterminate:border-primary indeterminate:bg-primary focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
+        className="peer h-4 w-4 shrink-0 cursor-pointer appearance-none rounded-[4px] border border-input bg-background outline-none transition-[color,box-shadow] hover:border-ring/60 checked:border-primary checked:bg-primary indeterminate:border-primary indeterminate:bg-primary focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
         {...rest}
       />
       {/* Checkmark — shown only when :checked (and not indeterminate). */}
@@ -44,7 +52,7 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(functi
         strokeWidth="2.5"
         strokeLinecap="round"
         strokeLinejoin="round"
-        className="pointer-events-none absolute inset-0 m-auto h-3 w-3 text-primary-foreground opacity-0 transition-opacity peer-checked:opacity-100 peer-indeterminate:opacity-0"
+        className="pointer-events-none h-3 w-3 text-primary-foreground opacity-0 transition-opacity peer-checked:opacity-100 peer-indeterminate:opacity-0"
       >
         <path d="M3.5 8.5 6.5 11.5 12.5 5" />
       </svg>
@@ -56,7 +64,7 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(functi
         stroke="currentColor"
         strokeWidth="2.5"
         strokeLinecap="round"
-        className="pointer-events-none absolute inset-0 m-auto h-3 w-3 text-primary-foreground opacity-0 peer-indeterminate:opacity-100"
+        className="pointer-events-none h-3 w-3 text-primary-foreground opacity-0 peer-indeterminate:opacity-100"
       >
         <path d="M4 8h8" />
       </svg>
