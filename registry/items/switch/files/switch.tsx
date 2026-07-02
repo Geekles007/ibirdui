@@ -52,8 +52,8 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(function 
       disabled={disabled}
       onClick={toggle}
       className={cn(
-        'inline-flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent shadow-xs outline-none transition-colors focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50',
-        on ? 'bg-primary' : 'bg-input',
+        'inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent p-0.5 outline-none transition-colors duration-200 focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50',
+        on ? 'bg-primary' : 'bg-input hover:bg-input/80',
         className,
       )}
       {...rest}
@@ -61,8 +61,8 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(function 
       <span
         aria-hidden="true"
         className={cn(
-          'pointer-events-none block h-4 w-4 rounded-full bg-background shadow-sm ring-0 transition-transform',
-          on ? 'translate-x-4' : 'translate-x-0',
+          'pointer-events-none block h-4 w-4 rounded-full bg-white shadow-sm transition-transform duration-200 ease-out',
+          on ? 'translate-x-5' : 'translate-x-0',
         )}
       />
     </button>

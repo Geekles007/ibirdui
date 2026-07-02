@@ -10,18 +10,18 @@ function cn(...parts: Array<string | false | null | undefined>): string {
 export type ButtonVariant = 'default' | 'secondary' | 'outline' | 'ghost' | 'destructive' | 'link';
 export type ButtonSize = 'sm' | 'md' | 'lg' | 'icon';
 
-// Flat by design (shadcn-style): filled variants carry a hairline `shadow-xs`
-// and shift their fill on hover; quiet variants (outline/ghost) fill with the
-// neutral `accent` surface. No lifts, no insets — the accent colour and the
-// focus ring do the work.
+// Truly flat (shadcn-style): no shadows, no lifts, no insets. Filled variants
+// shift their fill on hover and press; quiet variants (outline/ghost) fill with
+// the neutral `accent` surface. The accent colour, the hover/active fill and the
+// focus ring do all the work — the only box-shadow in play is the focus ring.
 const VARIANTS: Record<ButtonVariant, string> = {
-  default: 'bg-primary text-primary-foreground shadow-xs hover:bg-primary/90',
-  secondary: 'bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80',
+  default: 'bg-primary text-primary-foreground hover:bg-primary/90 active:bg-primary/95',
+  secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80 active:bg-secondary/90',
   outline:
-    'border border-input bg-background text-foreground shadow-xs hover:bg-accent hover:text-accent-foreground',
-  ghost: 'text-foreground hover:bg-accent hover:text-accent-foreground',
+    'border border-input bg-background text-foreground hover:bg-accent hover:text-accent-foreground active:bg-accent/70',
+  ghost: 'text-foreground hover:bg-accent hover:text-accent-foreground active:bg-accent/70',
   destructive:
-    'bg-destructive text-destructive-foreground shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/40',
+    'bg-destructive text-destructive-foreground hover:bg-destructive/90 active:bg-destructive/95 focus-visible:ring-destructive/40',
   link: 'text-primary underline-offset-4 hover:underline',
 };
 
