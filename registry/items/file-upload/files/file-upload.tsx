@@ -157,7 +157,6 @@ export function FileUpload({
 
   return (
     <div className={cn('flex flex-col gap-3', className)}>
-      {/* biome-ignore lint/a11y/useSemanticElements: a div with role=button keeps the dropzone separate from the hidden native input it triggers. */}
       <div
         role="button"
         tabIndex={disabled ? -1 : 0}

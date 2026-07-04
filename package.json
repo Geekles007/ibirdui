@@ -21,7 +21,7 @@
     "registry:build": "turbo run build --filter=ibirdui-registry",
     "rename": "node scripts/rename.mjs",
     "changeset": "changeset",
-    "version-packages": "changeset version",
+    "version-packages": "changeset version && biome format --write .",
     "release": "turbo run build --filter=./packages/* && changeset publish"
   },
   "devDependencies": {

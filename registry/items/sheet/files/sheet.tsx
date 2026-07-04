@@ -72,7 +72,6 @@ export function Sheet({
   // Drives the enter transition: render hidden, then flip to shown next frame.
   const [shown, setShown] = React.useState(false);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: runs per open/close, managing focus, scroll lock and the enter transition.
   React.useEffect(() => {
     if (!open) {
       setShown(false);
@@ -122,7 +121,6 @@ export function Sheet({
   const cfg = SIDE[side];
 
   return (
-    // biome-ignore lint/a11y/useKeyWithClickEvents: keyboard dismissal is handled by the panel's Escape key; the backdrop is a pointer convenience.
     <div
       className="fixed inset-0 z-[100]"
       onMouseDown={(e) => {

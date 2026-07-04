@@ -82,7 +82,6 @@ export function Avatar({
           {status === 'loading' && (
             <Skeleton className="absolute inset-0 h-full w-full rounded-full" />
           )}
-          {/* biome-ignore lint/a11y/useAltText: alt is supplied via the alt attribute below */}
           <img
             src={src}
             alt={label ?? ''}

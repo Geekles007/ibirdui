@@ -171,7 +171,6 @@ export function CommandPalette({
   let lastGroup: string | undefined;
 
   return (
-    // biome-ignore lint/a11y/useKeyWithClickEvents: the overlay backdrop is a click-to-dismiss convenience; all keyboard interaction lives on the input.
     <div
       className="fixed inset-0 z-[100] flex items-start justify-center bg-black/50 p-4 pt-[12vh] motion-safe:animate-in"
       onMouseDown={(e) => {
