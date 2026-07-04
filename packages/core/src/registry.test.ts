@@ -5,6 +5,7 @@ import {
   indexUrl,
   itemUrl,
   normalizeBaseUrl,
+  normalizeItemRef,
   registryItemSchema,
   resolveItemTree,
   resolveItemTreeWithOrigin,
@@ -39,6 +40,34 @@ describe('url helpers', () => {
   it('builds index and item urls', () => {
     expect(indexUrl('https://x.dev')).toBe('https://x.dev/r/index.json');
     expect(itemUrl('https://x.dev/', 'button')).toBe('https://x.dev/r/button.json');
+  });
+});
+
+describe('normalizeItemRef', () => {
+  it('leaves a bare name untouched', () => {
+    expect(normalizeItemRef('button')).toBe('button');
+    expect(normalizeItemRef('hero-agency')).toBe('hero-agency');
+  });
+
+  it('turns a scheme-less registry path into an absolute .json url', () => {
+    expect(normalizeItemRef('blocks.ibird.dev/r/hero-agency')).toBe(
+      'https://blocks.ibird.dev/r/hero-agency.json',
+    );
+  });
+
+  it('keeps an already-qualified url and only adds a missing .json', () => {
+    expect(normalizeItemRef('https://blocks.ibird.dev/r/hero.json')).toBe(
+      'https://blocks.ibird.dev/r/hero.json',
+    );
+    expect(normalizeItemRef('https://blocks.ibird.dev/r/hero')).toBe(
+      'https://blocks.ibird.dev/r/hero.json',
+    );
+  });
+
+  it('trims surrounding whitespace', () => {
+    expect(normalizeItemRef('  blocks.ibird.dev/r/hero  ')).toBe(
+      'https://blocks.ibird.dev/r/hero.json',
+    );
   });
 });
 

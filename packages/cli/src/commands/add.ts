@@ -1,7 +1,7 @@
 import { existsSync } from 'node:fs';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { dirname, join, resolve } from 'node:path';
-import { resolveItemTreeWithOrigin } from 'ibirdui-core';
+import { normalizeItemRef, resolveItemTreeWithOrigin } from 'ibirdui-core';
 import { bold, cyan, dim, green, red, yellow } from 'kleur/colors';
 import { resolveRegistry } from '../config.js';
 import { nodeFetch } from '../fetch.js';
@@ -25,7 +25,10 @@ export async function add(names: string[], options: AddOptions): Promise<void> {
 
   console.log(dim(`Registry: ${baseUrl}`));
 
-  const tree = await resolveItemTreeWithOrigin(baseUrl, names, { fetch: nodeFetch });
+  // Accept bare names ("button") or registry paths/URLs
+  // ("blocks.ibird.dev/r/hero", "https://…/r/hero.json") as roots.
+  const roots = names.map(normalizeItemRef);
+  const tree = await resolveItemTreeWithOrigin(baseUrl, roots, { fetch: nodeFetch });
   const lock = await readLockfile(cwd, baseUrl);
 
   const npmDeps = new Set<string>();
