@@ -10,14 +10,7 @@
     "url": "git+https://github.com/Geekles007/ibirdui.git",
     "directory": "packages/cli"
   },
-  "keywords": [
-    "ibirdui",
-    "cli",
-    "registry",
-    "shadcn",
-    "react",
-    "components"
-  ],
+  "keywords": ["ibirdui", "cli", "registry", "shadcn", "react", "components"],
   "type": "module",
   "publishConfig": {
     "access": "public"
@@ -25,9 +18,7 @@
   "bin": {
     "ibirdui": "./dist/index.js"
   },
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",

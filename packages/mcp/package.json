@@ -10,15 +10,7 @@
     "url": "git+https://github.com/Geekles007/ibirdui.git",
     "directory": "packages/mcp"
   },
-  "keywords": [
-    "ibirdui",
-    "mcp",
-    "model-context-protocol",
-    "registry",
-    "ai",
-    "react",
-    "components"
-  ],
+  "keywords": ["ibirdui", "mcp", "model-context-protocol", "registry", "ai", "react", "components"],
   "type": "module",
   "publishConfig": {
     "access": "public"
@@ -26,9 +18,7 @@
   "bin": {
     "ibirdui-mcp": "./dist/index.js"
   },
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",

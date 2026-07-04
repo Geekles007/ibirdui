@@ -10,20 +10,12 @@
     "url": "git+https://github.com/Geekles007/ibirdui.git",
     "directory": "packages/core"
   },
-  "keywords": [
-    "ibirdui",
-    "async-state",
-    "registry",
-    "react",
-    "shadcn"
-  ],
+  "keywords": ["ibirdui", "async-state", "registry", "react", "shadcn"],
   "type": "module",
   "publishConfig": {
     "access": "public"
   },
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",

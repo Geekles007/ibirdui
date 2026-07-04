@@ -250,7 +250,6 @@ export function DatePicker({
             </button>
           </div>
 
-          {/* biome-ignore lint/a11y/useSemanticElements: an ARIA grid is the calendar pattern; a <table> can't carry the roving-tabindex day buttons cleanly. */}
           <div
             ref={gridRef}
             role="grid"
