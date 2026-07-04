@@ -6,13 +6,35 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { type ReactNode, useEffect, useRef, useState } from 'react';
 
-const navItems = [
+const navItems: { label: string; href: string; external?: boolean }[] = [
   { label: 'Home', href: '/' },
   { label: 'Components', href: '/components' },
   { label: 'Tools', href: '/tools' },
   { label: 'How it works', href: '/#how' },
   { label: 'Roadmap', href: '/roadmap' },
+  { label: 'Blocks', href: 'https://blocks.ibird.dev', external: true },
 ];
+
+/** ↗ glyph marking a link that opens in a new tab. */
+function ExternalArrow() {
+  return (
+    <svg
+      width="12"
+      height="12"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      style={s('opacity:.75;margin-top:-1px')}
+    >
+      <path d="M7 17L17 7" />
+      <path d="M8 7h9v9" />
+    </svg>
+  );
+}
 
 /** Brand mark — the ibirdui bird on the rounded lime tile (matches the favicon). */
 function BirdMark({ size = 24 }: { size?: number }) {
@@ -154,6 +176,24 @@ export function SiteChrome({ current, children }: { current: string; children: R
             data-nav="desktop"
           >
             {navItems.map((n) => {
+              if (n.external) {
+                return (
+                  <a
+                    key={n.label}
+                    href={n.href}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    aria-label={`${n.label} (opens in a new tab)`}
+                    className="hov-surface"
+                    style={s(
+                      'display:inline-flex;align-items:center;gap:5px;padding:7px 11px;border-radius:7px;font-size:14px;color:var(--muted)',
+                    )}
+                  >
+                    {n.label}
+                    <ExternalArrow />
+                  </a>
+                );
+              }
               const active = n.label.toLowerCase() === current;
               return (
                 <Link
