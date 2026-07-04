@@ -34,6 +34,29 @@ export function baseUrlFromItemUrl(url: string): string {
   return url.replace(/\/r\/[^/]+\.json$/, '');
 }
 
+/**
+ * Normalize a user-supplied item reference (a CLI `add`/`upgrade` argument) into
+ * the shape {@link resolveItemTreeWithOrigin} expects:
+ *
+ *  - a **bare name** (`"button"`, `"hero-agency"`) — no path separator — is
+ *    returned unchanged, so it resolves against the `--registry` base URL;
+ *  - a **registry path**, with or without a scheme and `.json` suffix
+ *    (`"blocks.ibird.dev/r/hero"`, `"https://blocks.ibird.dev/r/hero.json"`),
+ *    is returned as a fully-qualified `https://…/r/<name>.json` absolute URL.
+ *
+ * This is what makes the documented `ibirdui add blocks.ibird.dev/r/hero`
+ * command work: the ref becomes a cross-registry URL that is fetched directly,
+ * with its own dependencies resolved against its origin — no `--registry` flag
+ * and no `.json` suffix required from the user.
+ */
+export function normalizeItemRef(ref: string): string {
+  const trimmed = ref.trim();
+  // No path separator ⇒ a bare item name, resolved against the base registry.
+  if (!trimmed.includes('/')) return trimmed;
+  const withScheme = isAbsoluteUrl(trimmed) ? trimmed : `https://${trimmed}`;
+  return withScheme.endsWith('.json') ? withScheme : `${withScheme}.json`;
+}
+
 type FetchLike = (input: string) => Promise<{
   ok: boolean;
   status: number;
