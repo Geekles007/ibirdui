@@ -19,6 +19,7 @@ program
   .argument('<items...>', 'item name(s) to add')
   .option('-r, --registry <url>', 'registry base URL')
   .option('-c, --cwd <path>', 'working directory', process.cwd())
+  .option('-d, --dir <path>', 'source dir to install into (e.g. src); auto-detected by default')
   .option('-o, --overwrite', 'overwrite existing files', false)
   .action(async (items: string[], options) => {
     await add(items, options);

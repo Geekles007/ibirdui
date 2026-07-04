@@ -23,6 +23,14 @@ export interface LockedItem {
 export interface Lockfile {
   $schema?: string;
   registry: string;
+  /**
+   * Source root that registry files are written under: `'.'` for the repo root
+   * (the default), `'src'` for a src-based layout (TanStack Start, src-based
+   * Next/Vite). Chosen once at first `add` and reused by `upgrade`/`doctor` so
+   * every command resolves the same on-disk paths. Optional for back-compat:
+   * lockfiles written before this field are treated as root (`'.'`).
+   */
+  baseDir?: string;
   items: Record<string, LockedItem>;
 }
 

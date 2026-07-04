@@ -1,10 +1,11 @@
 import { readFile } from 'node:fs/promises';
-import { join, resolve } from 'node:path';
+import { resolve } from 'node:path';
 import { type RegistryIndex, fetchRegistryIndex, hashContent } from 'ibirdui-core';
 import { bold, cyan, dim, green, red, yellow } from 'kleur/colors';
 import { resolveRegistry } from '../config.js';
 import { nodeFetch } from '../fetch.js';
 import { type LockedItem, readLockfile } from '../lockfile.js';
+import { ROOT_BASE_DIR, resolveTarget } from '../paths.js';
 
 export interface DoctorOptions {
   registry?: string;
@@ -78,6 +79,7 @@ export function summarize(reports: ItemReport[]): DoctorSummary {
 /** Build one item's report by reading its locked files off disk. */
 async function inspectItem(
   cwd: string,
+  baseDir: string,
   name: string,
   locked: LockedItem,
   index: RegistryIndex | null,
@@ -86,7 +88,7 @@ async function inspectItem(
   for (const [path, lockedHash] of Object.entries(locked.files)) {
     let current: string | null;
     try {
-      current = await readFile(join(cwd, path), 'utf8');
+      current = await readFile(resolveTarget(cwd, baseDir, path), 'utf8');
     } catch {
       current = null;
     }
@@ -113,6 +115,7 @@ export async function doctor(options: DoctorOptions): Promise<void> {
   const baseUrl = resolveRegistry(options.registry);
   const cwd = resolve(options.cwd ?? process.cwd());
   const lock = await readLockfile(cwd, baseUrl);
+  const baseDir = lock.baseDir ?? ROOT_BASE_DIR;
 
   const names = Object.keys(lock.items);
   if (names.length === 0) {
@@ -136,7 +139,7 @@ export async function doctor(options: DoctorOptions): Promise<void> {
 
   const reports: ItemReport[] = [];
   for (const [name, locked] of Object.entries(lock.items)) {
-    reports.push(await inspectItem(cwd, name, locked, index));
+    reports.push(await inspectItem(cwd, baseDir, name, locked, index));
   }
 
   for (const report of reports.sort((a, b) => a.name.localeCompare(b.name))) {

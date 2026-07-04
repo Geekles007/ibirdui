@@ -7,10 +7,10 @@ import Link from 'next/link';
 /** Primary navigation — the single source of truth for the header nav on every route. */
 export const navItems: { label: string; href: string; external?: boolean }[] = [
   { label: 'Home', href: '/' },
+  { label: 'Getting started', href: '/getting-started' },
   { label: 'Components', href: '/components' },
   { label: 'Tools', href: '/tools' },
   { label: 'How it works', href: '/#how' },
-  { label: 'Roadmap', href: '/roadmap' },
   { label: 'Blocks', href: 'https://blocks.ibird.dev', external: true },
 ];
 
