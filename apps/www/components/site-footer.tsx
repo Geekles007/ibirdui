@@ -28,11 +28,11 @@ export function SiteFooter() {
           >
             GitHub
           </a>
+          <Link href="/getting-started" className="hov-fg" style={s('color:var(--muted)')}>
+            Getting started
+          </Link>
           <Link href="/components" className="hov-fg" style={s('color:var(--muted)')}>
             Components
-          </Link>
-          <Link href="/roadmap" className="hov-fg" style={s('color:var(--muted)')}>
-            Roadmap
           </Link>
         </div>
       </div>

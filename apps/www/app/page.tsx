@@ -19,19 +19,6 @@ interface HC {
   states: string[];
 }
 
-const layerNames: Record<number, string> = {
-  0: 'Foundation',
-  1: 'State primitives',
-  2: 'Data display',
-  3: 'Fetching inputs',
-  4: 'Feedback & overlays',
-  5: 'Navigation',
-  6: 'Forms',
-  7: 'Realtime',
-  8: 'Overlays & menus',
-  9: 'Utility hooks',
-};
-
 const homeComponents: HC[] = [
   {
     name: 'async-state',
@@ -699,23 +686,6 @@ export default function Home() {
   const doneCount = shipped.length;
   // Home teaser shows at most 6; the "Browse all" link covers the rest.
   const featured = shipped.slice(0, 6);
-  const dotColor: Record<string, string> = {
-    done: 'var(--primary)',
-    next: 'var(--warning)',
-    planned: 'var(--border-strong)',
-  };
-  const layerCards = [...new Set(homeComponents.map((c) => c.layer))]
-    .sort((a, b) => a - b)
-    .map((L) => {
-      const its = homeComponents.filter((c) => c.layer === L);
-      const d = its.filter((c) => c.status === 'done').length;
-      return {
-        layer: L,
-        name: layerNames[L],
-        summary: d > 0 ? `${d}/${its.length}` : `${its.length} planned`,
-        dots: its.map((c) => ({ name: c.name, color: dotColor[c.status] })),
-      };
-    });
 
   const qsList = `${runner[pkg]} ibirdui list`;
   const qsAdd = `${runner[pkg]} ibirdui add data-list`;
@@ -2276,83 +2246,40 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ROADMAP TEASER */}
+      {/* GETTING STARTED TEASER */}
       <section
-        id="roadmap"
-        aria-labelledby="rm-h"
+        aria-labelledby="gs-h"
         style={s(
           'scroll-margin-top:80px;border-top:1px solid var(--border);background:var(--surface)',
         )}
       >
-        <div style={s('max-width:1180px;margin:0 auto;padding:84px 24px')}>
-          <div style={s(eyebrow)}>Roadmap</div>
+        <div style={s('max-width:1180px;margin:0 auto;padding:84px 24px;text-align:center')}>
+          <div style={s(`${eyebrow};text-align:center`)}>Get going</div>
           <h2
-            id="rm-h"
+            id="gs-h"
             style={s(
               'font-size:34px;line-height:1.16;letter-spacing:-.02em;font-weight:600;margin:0 0 12px',
             )}
           >
-            Six layers, building up.
+            From zero to your first component.
           </h2>
           <p
             style={s(
-              'font-size:16px;line-height:1.6;color:var(--muted);max-width:600px;margin:0 0 32px',
+              'font-size:16px;line-height:1.6;color:var(--muted);max-width:600px;margin:0 auto 32px',
             )}
           >
-            {homeComponents.length} components, each layer composing the one beneath it.{' '}
-            <strong style={s('color:var(--foreground);font-weight:600')}>
-              {doneCount} shipped
-            </strong>
-            , the rest mapped out.
+            A five-minute setup: install the theme, add a component, and learn where the CLI puts
+            files in <strong style={s('color:var(--foreground);font-weight:600')}>your</strong>{' '}
+            framework — Next.js, TanStack Start, Vite or Remix.
           </p>
-          <div
-            data-grid3="1"
-            style={s(
-              'display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:28px',
-            )}
-          >
-            {layerCards.map((lc) => (
-              <Link
-                key={lc.layer}
-                href="/roadmap"
-                className="hov-border"
-                style={s(
-                  'display:flex;flex-direction:column;gap:8px;padding:18px;border-radius:14px;border:1px solid var(--border);background:var(--background)',
-                )}
-              >
-                <div style={s('display:flex;align-items:center;justify-content:space-between')}>
-                  <span style={s(`font-family:${mono};font-size:12px;color:var(--accent-fg)`)}>
-                    L{lc.layer}
-                  </span>
-                  <span style={s(`font-family:${mono};font-size:11.5px;color:var(--muted-2)`)}>
-                    {lc.summary}
-                  </span>
-                </div>
-                <div style={s('font-size:15px;font-weight:600')}>{lc.name}</div>
-                <div aria-hidden="true" style={s('display:flex;gap:4px;margin-top:2px')}>
-                  {lc.dots.map((dt) => (
-                    <span
-                      key={dt.name}
-                      style={{
-                        width: '100%',
-                        height: '5px',
-                        borderRadius: '999px',
-                        background: dt.color,
-                      }}
-                    />
-                  ))}
-                </div>
-              </Link>
-            ))}
-          </div>
           <Link
-            href="/roadmap"
+            href="/getting-started"
             className="hov-dim"
             style={s(
               'display:inline-flex;align-items:center;gap:9px;padding:12px 18px;border-radius:11px;background:var(--primary);color:var(--primary-foreground);font-weight:600;font-size:14.5px',
             )}
           >
-            See the full roadmap
+            Read the getting started guide
             <Arrow />
           </Link>
         </div>

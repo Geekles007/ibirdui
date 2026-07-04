@@ -1,11 +1,12 @@
 import { existsSync } from 'node:fs';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
-import { dirname, join, resolve } from 'node:path';
+import { dirname, resolve } from 'node:path';
 import { type RegistryItem, fetchRegistryItemByUrl, hashContent, itemUrl } from 'ibirdui-core';
 import { bold, cyan, dim, green, red, yellow } from 'kleur/colors';
 import { resolveRegistry } from '../config.js';
 import { nodeFetch } from '../fetch.js';
 import { type LockedItem, readLockfile, recordItem, writeLockfile } from '../lockfile.js';
+import { ROOT_BASE_DIR, displayPath, resolveTarget } from '../paths.js';
 
 export interface UpgradeOptions {
   registry?: string;
@@ -38,6 +39,7 @@ export async function upgrade(names: string[], options: UpgradeOptions): Promise
   const baseUrl = resolveRegistry(options.registry);
   const cwd = resolve(options.cwd ?? process.cwd());
   const lock = await readLockfile(cwd, baseUrl);
+  const baseDir = lock.baseDir ?? ROOT_BASE_DIR;
 
   const targets = names.length > 0 ? names : Object.keys(lock.items);
   if (targets.length === 0) {
@@ -69,7 +71,8 @@ export async function upgrade(names: string[], options: UpgradeOptions): Promise
     console.log(`${bold(name)} ${dim(`${locked.version} → ${item.version}`)}`);
 
     for (const file of item.files) {
-      const target = join(cwd, file.path);
+      const target = resolveTarget(cwd, baseDir, file.path);
+      const shown = displayPath(baseDir, file.path);
       const newContent = file.content;
       const newHash = file.hash ?? hashContent(newContent);
       const lockedHash = locked.files[file.path];
@@ -77,7 +80,7 @@ export async function upgrade(names: string[], options: UpgradeOptions): Promise
       if (!existsSync(target)) {
         await mkdir(dirname(target), { recursive: true });
         await writeFile(target, newContent);
-        console.log(`  ${green('add ')} ${file.path} ${dim('(new file)')}`);
+        console.log(`  ${green('add ')} ${shown} ${dim('(new file)')}`);
         continue;
       }
 
@@ -85,16 +88,16 @@ export async function upgrade(names: string[], options: UpgradeOptions): Promise
       const currentHash = hashContent(current);
 
       if (currentHash === newHash) {
-        console.log(`  ${dim('ok  ')} ${file.path} ${dim('(already current)')}`);
+        console.log(`  ${dim('ok  ')} ${shown} ${dim('(already current)')}`);
       } else if (currentHash === lockedHash) {
         await writeFile(target, newContent);
-        console.log(`  ${green('upd ')} ${file.path}`);
+        console.log(`  ${green('upd ')} ${shown}`);
         updated += 1;
       } else {
         // Locally edited and upstream changed → don't clobber the user's work.
         const sidecar = `${target}.new`;
         await writeFile(sidecar, newContent);
-        console.log(`  ${red('conflict')} ${file.path} ${dim(`→ wrote ${file.path}.new`)}`);
+        console.log(`  ${red('conflict')} ${shown} ${dim(`→ wrote ${shown}.new`)}`);
         conflicts += 1;
       }
     }

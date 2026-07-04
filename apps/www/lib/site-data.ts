@@ -3771,6 +3771,10 @@ export interface PageLink {
 }
 export const pages: PageLink[] = [
   { label: 'Home', hint: 'Page', href: '/' },
+  { label: 'Getting started', hint: 'Page', href: '/getting-started' },
+  { label: 'Install & setup', hint: 'Getting started', href: '/getting-started#install' },
+  { label: 'Where files go', hint: 'Getting started', href: '/getting-started#layout' },
+  { label: 'The lockfile', hint: 'Getting started', href: '/getting-started#lockfile' },
   { label: 'Components', hint: 'Page', href: '/components' },
   { label: 'Tools', hint: 'CLI & MCP', href: '/tools' },
   { label: 'CLI doctor', hint: 'Tools', href: '/tools#doctor' },
@@ -3779,5 +3783,4 @@ export const pages: PageLink[] = [
   { label: 'How it works', hint: 'Section', href: '/#how' },
   { label: 'Comparison', hint: 'Section', href: '/#compare' },
   { label: 'Quick start', hint: 'Section', href: '/#quickstart' },
-  { label: 'Roadmap', hint: 'Page', href: '/roadmap' },
 ];
