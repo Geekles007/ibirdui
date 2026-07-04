@@ -1,6 +1,6 @@
 {
   "name": "ibirdui",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "The ibirdui CLI — add, upgrade and gen state-complete, accessible components into your project.",
   "license": "MIT",
   "author": "Geekles007",
@@ -10,7 +10,14 @@
     "url": "git+https://github.com/Geekles007/ibirdui.git",
     "directory": "packages/cli"
   },
-  "keywords": ["ibirdui", "cli", "registry", "shadcn", "react", "components"],
+  "keywords": [
+    "ibirdui",
+    "cli",
+    "registry",
+    "shadcn",
+    "react",
+    "components"
+  ],
   "type": "module",
   "publishConfig": {
     "access": "public"
@@ -18,7 +25,9 @@
   "bin": {
     "ibirdui": "./dist/index.js"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
