@@ -160,12 +160,22 @@ pre {
     scroll-behavior: auto !important;
   }
 }
+/* Mobile menu toggle: shown below the desktop breakpoint, hidden at/above it. */
+[data-nav="mobile-btn"] {
+  display: flex;
+}
 @media (min-width: 860px) {
   [data-nav="desktop"] {
     display: flex !important;
   }
   [data-kbd="1"] {
     display: inline !important;
+  }
+  [data-nav="mobile-btn"] {
+    display: none !important;
+  }
+  [data-nav="mobile-panel"] {
+    display: none !important;
   }
 }
 @media (max-width: 980px) {
