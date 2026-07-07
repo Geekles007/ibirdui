@@ -3,6 +3,7 @@
 import { BirdMark, ExternalArrow } from '@/components/brand';
 import { s } from '@/lib/style';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 /** Primary navigation — the single source of truth for the header nav on every route. */
 export const navItems: { label: string; href: string; external?: boolean }[] = [
@@ -28,6 +29,26 @@ interface SiteHeaderProps {
  * caller and passed in, so the same header renders identically on every route.
  */
 export function SiteHeader({ current, isLight, onToggleTheme, onOpenPalette }: SiteHeaderProps) {
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  // Close the mobile menu on Escape, and restore scroll if the viewport grows
+  // past the desktop breakpoint while the menu is open.
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setMenuOpen(false);
+    };
+    const onResize = () => {
+      if (window.innerWidth >= 860) setMenuOpen(false);
+    };
+    window.addEventListener('keydown', onKey);
+    window.addEventListener('resize', onResize);
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      window.removeEventListener('resize', onResize);
+    };
+  }, [menuOpen]);
+
   return (
     <header
       style={s(
@@ -174,8 +195,95 @@ export function SiteHeader({ current, isLight, onToggleTheme, onOpenPalette }: S
               Star
             </span>
           </a>
+          <button
+            type="button"
+            onClick={() => setMenuOpen((v) => !v)}
+            aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+            aria-expanded={menuOpen}
+            aria-controls="mobile-menu"
+            className="hov-border"
+            data-nav="mobile-btn"
+            style={s(
+              'align-items:center;justify-content:center;width:36px;height:36px;border-radius:8px;border:1px solid var(--border);background:var(--surface);cursor:pointer;color:var(--foreground)',
+            )}
+          >
+            {menuOpen ? (
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                aria-hidden="true"
+              >
+                <path d="M18 6L6 18M6 6l12 12" />
+              </svg>
+            ) : (
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                aria-hidden="true"
+              >
+                <path d="M3 6h18M3 12h18M3 18h18" />
+              </svg>
+            )}
+          </button>
         </div>
       </nav>
+
+      {menuOpen && (
+        <div
+          id="mobile-menu"
+          data-nav="mobile-panel"
+          style={s(
+            'display:flex;flex-direction:column;gap:2px;padding:8px 16px 16px;border-top:1px solid var(--border);background:var(--header-bg)',
+          )}
+        >
+          {navItems.map((n) => {
+            if (n.external) {
+              return (
+                <a
+                  key={n.label}
+                  href={n.href}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  aria-label={`${n.label} (opens in a new tab)`}
+                  onClick={() => setMenuOpen(false)}
+                  className="hov-surface"
+                  style={s(
+                    'display:inline-flex;align-items:center;gap:6px;padding:11px 12px;border-radius:8px;font-size:15px;color:var(--muted)',
+                  )}
+                >
+                  {n.label}
+                  <ExternalArrow />
+                </a>
+              );
+            }
+            const active = n.label.toLowerCase() === current;
+            return (
+              <Link
+                key={n.label}
+                href={n.href}
+                aria-current={active ? 'page' : undefined}
+                onClick={() => setMenuOpen(false)}
+                className={active ? undefined : 'hov-surface'}
+                style={s(
+                  `padding:11px 12px;border-radius:8px;font-size:15px;color:${active ? 'var(--foreground)' : 'var(--muted)'};${active ? 'background:var(--surface)' : ''}`,
+                )}
+              >
+                {n.label}
+              </Link>
+            );
+          })}
+        </div>
+      )}
     </header>
   );
 }
