@@ -1,5 +1,5 @@
 import { existsSync, readFileSync, statSync } from 'node:fs';
-import { join } from 'node:path';
+import { isAbsolute, join, relative, resolve } from 'node:path';
 
 /**
  * The repo root — the back-compat default. Registry files (components/, hooks/,
@@ -21,9 +21,21 @@ export function normalizeBaseDir(dir: string): string {
   return trimmed === '' || trimmed === '.' ? ROOT_BASE_DIR : trimmed;
 }
 
-/** Join cwd + baseDir + a registry-relative file path into an absolute target. */
+/**
+ * Resolve cwd + baseDir + a registry-relative file path into an absolute target,
+ * refusing to escape the install directory. A hostile or typo'd registry item
+ * whose `path` is absolute or contains `..` (e.g. `../../.git/hooks/pre-commit`)
+ * would otherwise let `add`/`upgrade` write anywhere the user can — so we confine
+ * every write under `cwd/baseDir` and throw if it would land outside.
+ */
 export function resolveTarget(cwd: string, baseDir: string, filePath: string): string {
-  return join(cwd, baseDir, filePath);
+  const root = resolve(cwd, baseDir);
+  const target = resolve(root, filePath);
+  const rel = relative(root, target);
+  if (rel === '' || rel.startsWith('..') || isAbsolute(rel)) {
+    throw new Error(`Refusing to write outside ${root}: "${filePath}"`);
+  }
+  return target;
 }
 
 /**
