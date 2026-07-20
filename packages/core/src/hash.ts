@@ -8,5 +8,10 @@ import { createHash } from 'node:crypto';
  * Node-only: used by the registry build and the CLI, never in the browser.
  */
 export function hashContent(content: string): string {
-  return `sha256:${createHash('sha256').update(content, 'utf8').digest('hex').slice(0, 16)}`;
+  // Normalize line endings before hashing so a file that differs only by CRLF vs
+  // LF — a Windows checkout, git `autocrlf`, or an editor's newline setting —
+  // isn't mistaken for a local edit. The registry build and the CLI both hash
+  // through here, so they always agree on what "untouched" means.
+  const normalized = content.replace(/\r\n?/g, '\n');
+  return `sha256:${createHash('sha256').update(normalized, 'utf8').digest('hex').slice(0, 16)}`;
 }
