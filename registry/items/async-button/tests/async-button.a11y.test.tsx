@@ -78,4 +78,18 @@ describe('AsyncButton accessibility & behaviour', () => {
     expect(onClick).toHaveBeenCalledOnce();
     expect(btn).not.toHaveAttribute('aria-busy');
   });
+
+  it('keeps the accessible name clean after announcing (no live-region leak)', async () => {
+    const d = deferred<void>();
+    render(<AsyncButton onClick={() => d.promise}>Save</AsyncButton>);
+    const btn = screen.getByRole('button');
+    expect(btn).toHaveAccessibleName('Save');
+
+    fireEvent.click(btn);
+    d.resolve();
+    // The live region announces "Done"…
+    await waitFor(() => expect(screen.getByRole('status')).toHaveTextContent('Done'));
+    // …but it must NOT bleed into the button's name (would read "Save Done").
+    expect(btn).toHaveAccessibleName('Save');
+  });
 });

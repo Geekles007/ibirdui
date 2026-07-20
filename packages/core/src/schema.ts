@@ -45,9 +45,11 @@ export const registryFileSchema = z.object({
 export type RegistryFile = z.infer<typeof registryFileSchema>;
 
 /**
- * Accessibility guarantees an item makes. Surfaced in the docs and in the `add`
- * output, and backed by an axe test that ships with the item when `tested` is
- * true — accessibility is verified, not just claimed.
+ * Accessibility guarantees an item makes, surfaced in the docs and the `add`
+ * output. When `tested` is true the item ships an axe/behaviour test in its
+ * `tests/` dir that runs in the registry's CI — and the registry build fails if
+ * it's missing — so the flag is verified, not just claimed. The test stays in the
+ * registry: consumers install the component, not the test.
  */
 export const a11ySchema = z.object({
   level: z.enum(['A', 'AA', 'AAA']).default('AA'),
