@@ -12,12 +12,29 @@ export const asyncStateNameSchema = z.enum([...ASYNC_STATUSES, 'optimistic'] as 
 export type AsyncStateName = z.infer<typeof asyncStateNameSchema>;
 
 /**
+ * A registry file's `path` is written verbatim under the consumer's project, so
+ * it must stay inside it. Reject anything that could escape — an absolute path, a
+ * Windows drive letter, or a `..` segment — so a hostile or typo'd registry can't
+ * make `add`/`upgrade` write outside the target (e.g. `../../.git/hooks/...`).
+ * Defence in depth: the CLI also confines every write in `resolveTarget`.
+ */
+function isSafeRegistryPath(p: string): boolean {
+  const normalized = p.replace(/\\/g, '/');
+  if (normalized.startsWith('/')) return false; // posix absolute
+  if (/^[a-zA-Z]:/.test(normalized)) return false; // windows drive (C:...)
+  return !normalized.split('/').includes('..'); // any parent-dir segment
+}
+
+/**
  * A single file that ships with a registry item. The `path` is relative to the
  * consumer project root; `content` is the literal source written to disk. `hash`
  * is filled in by the build and lets the CLI detect local edits on `upgrade`.
  */
 export const registryFileSchema = z.object({
-  path: z.string().min(1),
+  path: z.string().min(1).refine(isSafeRegistryPath, {
+    message:
+      'Registry file path must stay inside the project: no absolute paths, drive letters, or ".." segments.',
+  }),
   content: z.string(),
   /** Hint used by the CLI to decide a default target directory. */
   type: z.enum(['component', 'lib', 'hook', 'style', 'file']).default('file'),

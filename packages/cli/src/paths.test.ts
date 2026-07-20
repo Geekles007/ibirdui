@@ -40,6 +40,16 @@ describe('resolveTarget', () => {
       '/proj/components/button.tsx',
     );
   });
+
+  it('refuses a registry path that escapes the install dir', () => {
+    expect(() => resolveTarget('/proj', 'src', '../../etc/passwd')).toThrow(/outside/);
+    expect(() => resolveTarget('/proj', '.', '../secret')).toThrow(/outside/);
+    expect(() => resolveTarget('/proj', '.', '.git/hooks/../../../evil')).toThrow(/outside/);
+  });
+
+  it('refuses an absolute registry path', () => {
+    expect(() => resolveTarget('/proj', '.', '/etc/passwd')).toThrow(/outside/);
+  });
 });
 
 describe('displayPath', () => {
