@@ -1,7 +1,7 @@
 {
   "name": "streaming-list",
   "type": "component",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A list that fills in live as values stream in — the same loading/empty/error states as data-list, but rows arrive over time and new arrivals are announced politely. Pairs with use-stream.",
   "states": ["loading", "empty", "error"],
   "a11y": {

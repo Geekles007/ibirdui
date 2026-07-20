@@ -120,7 +120,8 @@ export function DataTable<T>({
       <StateBoundary
         state={state}
         labels={{
-          success: undefined,
+          // This table owns its own live region below, so silence StateBoundary's.
+          success: null,
           empty: `No ${label.toLowerCase()}`,
         }}
         loading={

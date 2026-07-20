@@ -60,6 +60,24 @@ describe('StreamingList accessibility', () => {
     expect(screen.getByRole('status')).toHaveTextContent('1 new item');
   });
 
+  it('re-announces an identical consecutive delta by changing the live-region text', () => {
+    const node = (data: Event[]) => (
+      <StreamingList state={success(data)} label="Activity" getKey={(e) => e.id}>
+        {(e) => <span>{e.text}</span>}
+      </StreamingList>
+    );
+    const { rerender } = render(node(events)); // 2 items
+    rerender(node([...events, { id: 3, text: 'Grace shipped' }])); // +1 → "1 new item"
+    const first = screen.getByRole('status').textContent;
+    rerender(node([...events, { id: 3, text: 'Grace shipped' }, { id: 4, text: 'Mike merged' }])); // +1 again
+    const second = screen.getByRole('status').textContent;
+
+    expect(first).toContain('1 new item');
+    expect(second).toContain('1 new item');
+    // Same words, but the text must differ so a screen reader re-announces it.
+    expect(second).not.toBe(first);
+  });
+
   it('renders newest-first when asked', () => {
     render(
       <StreamingList state={success(events)} label="Activity" newestFirst getKey={(e) => e.id}>
