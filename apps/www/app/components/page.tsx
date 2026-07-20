@@ -124,7 +124,7 @@ export default function ComponentsPage() {
   const copyTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const demoTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
-  const { isLight, toggle: toggleTheme } = useTheme();
+  const { toggle: toggleTheme } = useTheme();
   const [selected, setSelected] = useState('async-state');
   const [sideQuery, setSideQuery] = useState('');
   const [demoState, setDemoState] = useState<DemoState>('success');
@@ -301,7 +301,6 @@ export default function ComponentsPage() {
 
       <SiteHeader
         current="components"
-        isLight={isLight}
         onToggleTheme={toggleTheme}
         onOpenPalette={() => palette.setOpen(true)}
       />

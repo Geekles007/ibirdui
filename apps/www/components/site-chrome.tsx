@@ -13,7 +13,7 @@ import type { ReactNode } from 'react';
  * directly because it needs to interleave its own sidebar layout.
  */
 export function SiteChrome({ current, children }: { current: string; children: ReactNode }) {
-  const { isLight, toggle } = useTheme();
+  const { toggle } = useTheme();
   const palette = useCommandPalette();
 
   return (
@@ -33,7 +33,6 @@ export function SiteChrome({ current, children }: { current: string; children: R
 
       <SiteHeader
         current={current}
-        isLight={isLight}
         onToggleTheme={toggle}
         onOpenPalette={() => palette.setOpen(true)}
       />

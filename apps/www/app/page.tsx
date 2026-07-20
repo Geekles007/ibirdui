@@ -1519,7 +1519,9 @@ export default function Home() {
             <code style={s(`font-family:${mono};font-size:14px;color:var(--accent-fg)`)}>
               ibirdui gen
             </code>{' '}
-            can suggest the right pieces for a task.
+            suggests the right pieces — and the{' '}
+            <strong style={s('color:var(--foreground);font-weight:600')}>MCP server</strong> hands
+            an AI assistant their real source to compose from, instead of hallucinating markup.
           </p>
           <div style={s('display:flex;gap:14px;flex-wrap:wrap')}>
             <div
@@ -1563,6 +1565,31 @@ export default function Home() {
               </span>
               <span style={s('font-size:13.5px;font-weight:500')}>AI manifest</span>
             </div>
+          </div>
+
+          {/* MCP server callout — the launch's lead angle, on the landing page. */}
+          <div
+            style={s(
+              'margin-top:22px;padding:16px 18px;border-radius:14px;border:1px solid var(--border);background:var(--surface)',
+            )}
+          >
+            <div
+              style={s(
+                'display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:10px',
+              )}
+            >
+              <span style={s('font-size:13.5px;font-weight:600')}>Read them over MCP</span>
+              <span style={s('font-size:12.5px;color:var(--muted)')}>
+                give an AI assistant your real components
+              </span>
+            </div>
+            <code
+              style={s(
+                `display:block;font-family:${mono};font-size:13px;color:var(--accent-fg);background:var(--background);border:1px solid var(--border-strong);border-radius:9px;padding:10px 12px;overflow-x:auto`,
+              )}
+            >
+              claude mcp add ibirdui -- npx -y ibirdui-mcp
+            </code>
           </div>
         </div>
 

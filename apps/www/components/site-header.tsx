@@ -3,6 +3,7 @@
 import { BirdMark, ExternalArrow } from '@/components/brand';
 import { s } from '@/lib/style';
 import Link from 'next/link';
+import { useState } from 'react';
 
 /** Primary navigation — the single source of truth for the header nav on every route. */
 export const navItems: { label: string; href: string; external?: boolean }[] = [
@@ -17,17 +18,61 @@ export const navItems: { label: string; href: string; external?: boolean }[] = [
 interface SiteHeaderProps {
   /** The active nav item, matched case-insensitively against each label. */
   current: string;
-  isLight: boolean;
   onToggleTheme: () => void;
   onOpenPalette: () => void;
 }
 
+function NavLink({
+  item,
+  current,
+  onNavigate,
+}: {
+  item: (typeof navItems)[number];
+  current: string;
+  onNavigate?: () => void;
+}) {
+  if (item.external) {
+    return (
+      <a
+        href={item.href}
+        target="_blank"
+        rel="noreferrer noopener"
+        aria-label={`${item.label} (opens in a new tab)`}
+        className="hov-surface"
+        onClick={onNavigate}
+        style={s(
+          'display:inline-flex;align-items:center;gap:5px;padding:7px 11px;border-radius:7px;font-size:14px;color:var(--muted)',
+        )}
+      >
+        {item.label}
+        <ExternalArrow />
+      </a>
+    );
+  }
+  const active = item.label.toLowerCase() === current;
+  return (
+    <Link
+      href={item.href}
+      aria-current={active ? 'page' : undefined}
+      className={active ? undefined : 'hov-surface'}
+      onClick={onNavigate}
+      style={s(
+        `padding:7px 11px;border-radius:7px;font-size:14px;color:${active ? 'var(--foreground)' : 'var(--muted)'};${active ? 'background:var(--surface)' : ''}`,
+      )}
+    >
+      {item.label}
+    </Link>
+  );
+}
+
 /**
- * The shared sticky header: brand mark, primary nav, ⌘K trigger, theme toggle
- * and GitHub link. Presentational — theme and palette state are owned by the
- * caller and passed in, so the same header renders identically on every route.
+ * The shared sticky header: brand mark, primary nav, ⌘K trigger, theme toggle and
+ * GitHub link. Below 860px the inline nav collapses into a hamburger that opens a
+ * dropdown. Theme and palette state are owned by the caller and passed in.
  */
-export function SiteHeader({ current, isLight, onToggleTheme, onOpenPalette }: SiteHeaderProps) {
+export function SiteHeader({ current, onToggleTheme, onOpenPalette }: SiteHeaderProps) {
+  const [mobileOpen, setMobileOpen] = useState(false);
+
   return (
     <header
       style={s(
@@ -53,40 +98,9 @@ export function SiteHeader({ current, isLight, onToggleTheme, onOpenPalette }: S
           style={s('display:none;align-items:center;gap:4px;margin-left:8px')}
           data-nav="desktop"
         >
-          {navItems.map((n) => {
-            if (n.external) {
-              return (
-                <a
-                  key={n.label}
-                  href={n.href}
-                  target="_blank"
-                  rel="noreferrer noopener"
-                  aria-label={`${n.label} (opens in a new tab)`}
-                  className="hov-surface"
-                  style={s(
-                    'display:inline-flex;align-items:center;gap:5px;padding:7px 11px;border-radius:7px;font-size:14px;color:var(--muted)',
-                  )}
-                >
-                  {n.label}
-                  <ExternalArrow />
-                </a>
-              );
-            }
-            const active = n.label.toLowerCase() === current;
-            return (
-              <Link
-                key={n.label}
-                href={n.href}
-                aria-current={active ? 'page' : undefined}
-                className={active ? undefined : 'hov-surface'}
-                style={s(
-                  `padding:7px 11px;border-radius:7px;font-size:14px;color:${active ? 'var(--foreground)' : 'var(--muted)'};${active ? 'background:var(--surface)' : ''}`,
-                )}
-              >
-                {n.label}
-              </Link>
-            );
-          })}
+          {navItems.map((n) => (
+            <NavLink key={n.label} item={n} current={current} />
+          ))}
         </div>
         <div style={s('margin-left:auto;display:flex;align-items:center;gap:8px')}>
           <button
@@ -130,32 +144,33 @@ export function SiteHeader({ current, isLight, onToggleTheme, onOpenPalette }: S
               'display:flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:8px;border:1px solid var(--border);background:var(--surface);cursor:pointer;color:var(--foreground)',
             )}
           >
-            {isLight ? (
-              <svg
-                width="17"
-                height="17"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                aria-hidden="true"
-              >
-                <path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z" />
-              </svg>
-            ) : (
-              <svg
-                width="17"
-                height="17"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                aria-hidden="true"
-              >
-                <circle cx="12" cy="12" r="4.2" />
-                <path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.8 4.8l1.8 1.8M17.4 17.4l1.8 1.8M19.2 4.8l-1.8 1.8M6.6 17.4l-1.8 1.8" />
-              </svg>
-            )}
+            {/* Both icons render; CSS shows the one for the active theme, so the
+                markup is theme-independent and never mismatches on hydration. */}
+            <svg
+              className="theme-icon theme-icon--sun"
+              width="17"
+              height="17"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              aria-hidden="true"
+            >
+              <circle cx="12" cy="12" r="4.2" />
+              <path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.8 4.8l1.8 1.8M17.4 17.4l1.8 1.8M19.2 4.8l-1.8 1.8M6.6 17.4l-1.8 1.8" />
+            </svg>
+            <svg
+              className="theme-icon theme-icon--moon"
+              width="17"
+              height="17"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              aria-hidden="true"
+            >
+              <path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z" />
+            </svg>
           </button>
           <a
             href="https://github.com/Geekles007/ibirdui"
@@ -174,8 +189,57 @@ export function SiteHeader({ current, isLight, onToggleTheme, onOpenPalette }: S
               Star
             </span>
           </a>
+          {/* Hamburger — only shown below 860px (see globals.css [data-nav]). */}
+          <button
+            type="button"
+            data-nav="mobile-toggle"
+            aria-label="Toggle navigation menu"
+            aria-expanded={mobileOpen}
+            aria-controls="mobile-nav"
+            onClick={() => setMobileOpen((o) => !o)}
+            className="hov-border"
+            style={s(
+              'align-items:center;justify-content:center;width:36px;height:36px;border-radius:8px;border:1px solid var(--border);background:var(--surface);cursor:pointer;color:var(--foreground)',
+            )}
+          >
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              aria-hidden="true"
+            >
+              {mobileOpen ? (
+                <path d="M6 6l12 12M18 6L6 18" />
+              ) : (
+                <path d="M4 7h16M4 12h16M4 17h16" />
+              )}
+            </svg>
+          </button>
         </div>
       </nav>
+
+      {mobileOpen && (
+        <div
+          id="mobile-nav"
+          data-nav="mobile-menu"
+          style={s(
+            'display:flex;flex-direction:column;gap:2px;padding:8px 16px 16px;border-top:1px solid var(--border);background:var(--header-bg)',
+          )}
+        >
+          {navItems.map((n) => (
+            <NavLink
+              key={n.label}
+              item={n}
+              current={current}
+              onNavigate={() => setMobileOpen(false)}
+            />
+          ))}
+        </div>
+      )}
     </header>
   );
 }

@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 import './globals.css';
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://ui.ibird.dev'),
   title: 'ibirdui — state-complete, accessible, upgradeable React components',
   description:
     "Registry-as-code React components. Inspired by shadcn's copy-paste ownership and built on it — adding every async state, verified accessibility, and an upgrade path that survives your edits.",
@@ -22,10 +23,21 @@ export const metadata: Metadata = {
   },
 };
 
+/**
+ * Set the colour theme before the first paint, from localStorage or the system
+ * preference, so navigations keep the chosen theme and the page never flashes.
+ */
+const themeScript = `(function(){try{var k='ibirdui-theme';var t=localStorage.getItem(k);if(t!=='light'&&t!=='dark'){t=window.matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';}document.documentElement.dataset.theme=t;}catch(e){}})();`;
+
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" data-theme="dark">
+    <html lang="en" data-theme="dark" suppressHydrationWarning>
       <head>
+        {/* Runs before hydration to avoid a theme flash — see themeScript. */}
+        <script
+          // biome-ignore lint/security/noDangerouslySetInnerHtml: tiny, static, first-paint theme script
+          dangerouslySetInnerHTML={{ __html: themeScript }}
+        />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
