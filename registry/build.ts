@@ -55,6 +55,25 @@ async function readJson<T>(path: string): Promise<T> {
   return JSON.parse(await readFile(path, 'utf8')) as T;
 }
 
+/**
+ * When an item claims `a11y.tested: true`, it must actually ship a test in its
+ * `tests/` dir — so the flag can't rot into a false promise. The tests run in the
+ * registry's CI; they stay here, not in the consumer's install.
+ */
+async function assertA11yTest(itemRoot: string, name: string): Promise<void> {
+  let files: string[] = [];
+  try {
+    files = await readdir(join(itemRoot, 'tests'));
+  } catch {
+    // No tests/ dir — leave files empty so the check below fails.
+  }
+  if (!files.some((f) => f.endsWith('.test.ts') || f.endsWith('.test.tsx'))) {
+    throw new Error(
+      `"${name}" declares a11y.tested: true but ships no test in tests/. Add a test or set tested: false.`,
+    );
+  }
+}
+
 async function listItemDirs(): Promise<string[]> {
   const entries = await readdir(ITEMS_DIR, { withFileTypes: true });
   return entries.filter((e) => e.isDirectory()).map((e) => e.name);
@@ -63,6 +82,8 @@ async function listItemDirs(): Promise<string[]> {
 async function buildItem(dir: string): Promise<RegistryItem> {
   const itemRoot = join(ITEMS_DIR, dir);
   const meta = await readJson<ItemMeta>(join(itemRoot, 'meta.json'));
+
+  if (meta.a11y?.tested) await assertA11yTest(itemRoot, meta.name);
 
   const files = await Promise.all(
     meta.files.map(async (file) => {

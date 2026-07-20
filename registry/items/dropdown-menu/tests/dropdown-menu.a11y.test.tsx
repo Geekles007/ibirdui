@@ -80,3 +80,54 @@ describe('DropdownMenu accessibility', () => {
     expect(trigger).toHaveFocus();
   });
 });
+
+describe('DropdownMenu keyboard navigation', () => {
+  const item = (name: string) => screen.getByRole('menuitem', { name });
+
+  it('opens on ArrowDown, focusing the first item with roving tabindex', () => {
+    renderMenu();
+    fireEvent.keyDown(screen.getByRole('button', { name: 'Actions' }), { key: 'ArrowDown' });
+    expect(item('Edit')).toHaveFocus();
+    expect(item('Edit')).toHaveAttribute('tabindex', '0');
+    expect(item('Share')).toHaveAttribute('tabindex', '-1');
+  });
+
+  it('opens on ArrowUp focusing the last enabled item', () => {
+    renderMenu();
+    fireEvent.keyDown(screen.getByRole('button', { name: 'Actions' }), { key: 'ArrowUp' });
+    // Delete is disabled, so the last *enabled* item is Share.
+    expect(item('Share')).toHaveFocus();
+  });
+
+  it('moves with Arrow keys and wraps around, skipping the disabled item', () => {
+    renderMenu();
+    fireEvent.keyDown(screen.getByRole('button', { name: 'Actions' }), { key: 'ArrowDown' });
+    const menu = screen.getByRole('menu');
+
+    fireEvent.keyDown(menu, { key: 'ArrowDown' });
+    expect(item('Share')).toHaveFocus();
+    fireEvent.keyDown(menu, { key: 'ArrowDown' }); // past disabled Delete → wraps to Edit
+    expect(item('Edit')).toHaveFocus();
+    fireEvent.keyDown(menu, { key: 'ArrowUp' }); // wraps back up to Share
+    expect(item('Share')).toHaveFocus();
+  });
+
+  it('jumps to the first / last enabled item with Home / End', () => {
+    renderMenu();
+    fireEvent.keyDown(screen.getByRole('button', { name: 'Actions' }), { key: 'ArrowDown' });
+    const menu = screen.getByRole('menu');
+
+    fireEvent.keyDown(menu, { key: 'End' });
+    expect(item('Share')).toHaveFocus();
+    fireEvent.keyDown(menu, { key: 'Home' });
+    expect(item('Edit')).toHaveFocus();
+  });
+
+  it('selects the focused item with Enter and closes', () => {
+    const { onEdit } = renderMenu();
+    fireEvent.keyDown(screen.getByRole('button', { name: 'Actions' }), { key: 'ArrowDown' });
+    fireEvent.keyDown(screen.getByRole('menu'), { key: 'Enter' });
+    expect(onEdit).toHaveBeenCalledTimes(1);
+    expect(screen.queryByRole('menu')).not.toBeInTheDocument();
+  });
+});

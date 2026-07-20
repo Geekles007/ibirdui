@@ -1,7 +1,7 @@
 {
   "name": "async-button",
   "type": "component",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A button that owns its own pending and error state: give it an onClick that returns a promise and it disables, shows a spinner, sets aria-busy and announces the result.",
   "states": ["loading", "error"],
   "a11y": {
