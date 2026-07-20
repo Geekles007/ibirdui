@@ -1,7 +1,7 @@
 {
   "name": "state-boundary",
   "type": "component",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Maps an AsyncState<T> onto loading/empty/error/success slots with built-in live-region announcements and focus management.",
   "states": ["loading", "empty", "error"],
   "a11y": {

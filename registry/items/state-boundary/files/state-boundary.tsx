@@ -27,8 +27,12 @@ export interface StateBoundaryProps<T> {
   empty?: React.ReactNode;
   /** Visual shown on error. Receives the error and an optional retry callback. */
   error?: (error: Error, retry?: () => void) => React.ReactNode;
-  /** Override the screen-reader announcement for any state. */
-  labels?: Partial<Record<AsyncStatus, string>>;
+  /**
+   * Override the screen-reader announcement for a state. Set a value to `null` to
+   * announce nothing for that state — e.g. a component that owns its own live
+   * region and doesn't want a second, competing one.
+   */
+  labels?: Partial<Record<AsyncStatus, string | null>>;
   className?: string;
 }
 
@@ -51,11 +55,23 @@ export function StateBoundary<T>({
   labels,
   className,
 }: StateBoundaryProps<T>) {
-  const label = labels?.[state.status] ?? DEFAULT_LABELS[state.status];
-  const retryRef = React.useRef<HTMLButtonElement>(null);
+  const override = labels?.[state.status];
+  // `null` means "announce nothing" for this state; absent falls back to the default.
+  const announceText = override === null ? '' : (override ?? DEFAULT_LABELS[state.status]);
+  // Visible slots (empty / error) always show human text, never blank.
+  const visibleLabel = override ?? DEFAULT_LABELS[state.status];
+
+  // Drive the live region from an effect so it is empty at first paint and the
+  // text lands as a *mutation*: a live region that already holds its text on
+  // mount is not announced by screen readers.
+  const [announced, setAnnounced] = React.useState('');
+  React.useEffect(() => {
+    setAnnounced(announceText);
+  }, [announceText]);
 
   // Move focus to the retry button when we enter the error state, so keyboard
   // and screen-reader users land on the actionable control.
+  const retryRef = React.useRef<HTMLButtonElement>(null);
   React.useEffect(() => {
     if (state.status === 'error') retryRef.current?.focus();
   }, [state.status]);
@@ -67,18 +83,22 @@ export function StateBoundary<T>({
     >
       {/* Polite live region: announced, not seen. */}
       <span role="status" aria-live="polite" className="sr-only">
-        {label}
+        {announced}
       </span>
 
       {state.status === 'loading' && (loading ?? <DefaultSkeleton />)}
 
-      {state.status === 'empty' && (empty ?? <DefaultEmpty>{label}</DefaultEmpty>)}
+      {state.status === 'empty' && (empty ?? <DefaultEmpty>{visibleLabel}</DefaultEmpty>)}
 
       {state.status === 'error' &&
         (error ? (
           error(state.error, state.retry)
         ) : (
-          <DefaultError ref={retryRef} message={state.error.message || label} retry={state.retry} />
+          <DefaultError
+            ref={retryRef}
+            message={state.error.message || visibleLabel}
+            retry={state.retry}
+          />
         ))}
 
       {state.status === 'success' && children(state.data)}

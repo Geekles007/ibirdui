@@ -51,6 +51,7 @@ export function StreamingList<T>({
 }: StreamingListProps<T>) {
   const [announce, setAnnounce] = React.useState('');
   const prevCount = React.useRef(0);
+  const tick = React.useRef(0);
 
   // Announce the first batch as a count, then each later arrival as a delta.
   React.useEffect(() => {
@@ -59,13 +60,20 @@ export function StreamingList<T>({
       return;
     }
     const count = state.data.length;
+    let message = '';
     if (prevCount.current === 0) {
-      setAnnounce(`${count} ${count === 1 ? 'item' : 'items'}`);
+      message = `${count} ${count === 1 ? 'item' : 'items'}`;
     } else if (count > prevCount.current) {
       const delta = count - prevCount.current;
-      setAnnounce(`${delta} new ${delta === 1 ? 'item' : 'items'}`);
+      message = `${delta} new ${delta === 1 ? 'item' : 'items'}`;
     }
     prevCount.current = count;
+    if (message) {
+      // Toggle a trailing zero-width space so two identical arrivals ("1 new item"
+      // twice) still change the live-region text — otherwise the second is silent.
+      tick.current += 1;
+      setAnnounce(tick.current % 2 ? `${message}\u200B` : message);
+    }
   }, [state]);
 
   // The announcement rides StateBoundary's own polite live region (as the

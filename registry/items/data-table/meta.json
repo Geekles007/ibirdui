@@ -1,7 +1,7 @@
 {
   "name": "data-table",
   "type": "component",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A sortable table over an AsyncState<T[]>: loading skeleton rows, empty/error via state-boundary, and sortable columns with aria-sort and announced sort changes. You describe columns; the table does the rest.",
   "states": ["loading", "empty", "error"],
   "a11y": {

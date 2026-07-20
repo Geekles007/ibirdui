@@ -54,4 +54,21 @@ describe('StateBoundary accessibility', () => {
     expect(screen.getByText('a,b')).toBeInTheDocument();
     await expectNoViolations(container);
   });
+
+  it('updates the live region on a state transition', () => {
+    const { rerender } = render(<StateBoundary state={loading()}>{() => null}</StateBoundary>);
+    expect(screen.getByRole('status')).toHaveTextContent('Loading…');
+    rerender(<StateBoundary state={success(['x'])}>{() => <p>x</p>}</StateBoundary>);
+    expect(screen.getByRole('status')).toHaveTextContent('Content loaded');
+  });
+
+  it('stays silent for a state whose label is null', () => {
+    render(
+      <StateBoundary state={success(['x'])} labels={{ success: null }}>
+        {() => <p>x</p>}
+      </StateBoundary>,
+    );
+    // A caller with its own live region (e.g. data-table) can silence this one.
+    expect(screen.getByRole('status')).toBeEmptyDOMElement();
+  });
 });
