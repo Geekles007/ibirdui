@@ -13,4 +13,10 @@ describe('hashContent', () => {
   it('is namespaced', () => {
     expect(hashContent('x')).toMatch(/^sha256:[0-9a-f]{16}$/);
   });
+
+  it('ignores line-ending style so CRLF and LF hash the same', () => {
+    // A Windows checkout / git autocrlf must not read as a local edit.
+    expect(hashContent('a\r\nb\r\n')).toBe(hashContent('a\nb\n'));
+    expect(hashContent('a\rb')).toBe(hashContent('a\nb'));
+  });
 });
