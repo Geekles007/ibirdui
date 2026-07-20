@@ -47,7 +47,7 @@ program
 
 program
   .command('gen')
-  .description('Suggest components for a natural-language prompt (AI manifest).')
+  .description('Recommend components for a task, by keyword-searching the registry manifest.')
   .argument('<prompt>', 'what you want to build, in plain language')
   .option('-r, --registry <url>', 'registry base URL')
   .action(async (prompt: string, options) => {

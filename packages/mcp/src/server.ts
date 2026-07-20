@@ -72,7 +72,7 @@ function formatItem(item: RegistryItem): string {
  * read the real registry components instead of hallucinating markup.
  *
  *  - `list_components`   — the catalog (optionally filtered by async state)
- *  - `search_components` — rank the catalog against a natural-language need
+ *  - `search_components` — keyword-rank the catalog for a task (you do the reasoning)
  *  - `get_component`     — full details + real source for one component
  */
 export function createServer(): McpServer {
@@ -125,7 +125,7 @@ export function createServer(): McpServer {
     {
       title: 'Search ibirdui components',
       description:
-        'Find the ibirdui components that best fit a natural-language need (e.g. "a button that shows a loading spinner" or "a sortable table with empty state"). Returns ranked matches with their intents and install command.',
+        'Keyword-rank the ibirdui registry for a task (e.g. "a button that shows a loading spinner" or "a sortable table with an empty state") and return the best-matching real components with their intents and install command. This is a deterministic keyword ranker, not semantic search — apply your own judgement, and call `get_component` to read a match\'s real source before composing with it.',
       inputSchema: {
         query: z.string().min(1).describe('What you want to build, in plain language.'),
         limit: z.number().int().min(1).max(20).optional().describe('Max results (default 8).'),

@@ -12,8 +12,8 @@ live tools.
 
 | Tool | What it does |
 | --- | --- |
-| `list_components` | List the whole catalog — name, purpose, async states. Optional `state` filter (`loading` · `empty` · `error` · `optimistic` · `offline`). |
-| `search_components` | Rank the catalog against a natural-language need (`"a sortable table with an empty state"`). Returns matches with their intents + install command. |
+| `list_components` | List the whole catalog — name, purpose, async states. Optional `state` filter (`loading` · `empty` · `error` · `optimistic`). |
+| `search_components` | Keyword-rank the catalog for a task (`"a sortable table with an empty state"`) and return the best-matching real components with intents + install command. Deterministic keyword ranking, not semantic search — pair it with `get_component`. |
 | `get_component` | Full details and **real source** for one component: description, a11y guarantees, examples, dependencies, and every file it installs. |
 
 ## Use it

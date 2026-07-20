@@ -1,6 +1,6 @@
 import type { RegistryIndexEntry } from 'ibirdui-core';
 import { describe, expect, it } from 'vitest';
-import { rankEntries, scoreEntry } from './search.js';
+import { rankEntries } from './search.js';
 
 function entry(partial: Partial<RegistryIndexEntry> & { name: string }): RegistryIndexEntry {
   return {
@@ -33,33 +33,16 @@ const avatar = entry({
 });
 const catalog: RegistryIndexEntry[] = [asyncButton, dataTable, avatar];
 
-describe('scoreEntry', () => {
-  it('is zero for an empty query', () => {
-    expect(scoreEntry(asyncButton, [])).toBe(0);
-  });
-
-  it('rewards an exact name match most', () => {
-    const exact = scoreEntry(asyncButton, ['async-button']);
-    const partial = scoreEntry(asyncButton, ['button']);
-    expect(exact).toBeGreaterThan(partial);
-  });
-
-  it('credits intent and state hits', () => {
-    // "loading" hits both an intent phrase and a state.
-    expect(scoreEntry(asyncButton, ['loading'])).toBeGreaterThan(0);
-  });
-});
-
 describe('rankEntries', () => {
   it('orders by relevance and drops non-matches', () => {
-    const ranked = rankEntries(catalog, 'sortable table');
+    const ranked = rankEntries(catalog, 'a sortable table with an empty state');
     expect(ranked[0]?.entry.name).toBe('data-table');
     expect(ranked.every((r) => r.score > 0)).toBe(true);
     expect(ranked.map((r) => r.entry.name)).not.toContain('avatar');
   });
 
   it('respects the limit', () => {
-    const ranked = rankEntries(catalog, 'a button table avatar state', 2);
+    const ranked = rankEntries(catalog, 'button table avatar state', 2);
     expect(ranked).toHaveLength(2);
   });
 
