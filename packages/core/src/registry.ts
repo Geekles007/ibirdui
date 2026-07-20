@@ -20,9 +20,12 @@ export function itemUrl(baseUrl: string, name: string): string {
   return `${normalizeBaseUrl(baseUrl)}/r/${name}.json`;
 }
 
-/** True for an http(s) absolute URL — i.e. a cross-registry dependency. */
+/**
+ * True for an absolute URL — a cross-registry dependency or a local `file://`
+ * registry. Anything else is a bare item name resolved against a base URL.
+ */
 export function isAbsoluteUrl(ref: string): boolean {
-  return /^https?:\/\//i.test(ref);
+  return /^(https?|file):\/\//i.test(ref);
 }
 
 /**
