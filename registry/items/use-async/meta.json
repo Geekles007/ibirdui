@@ -1,7 +1,7 @@
 {
   "name": "use-async",
   "type": "hook",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Run an async function and get a fully typed AsyncState<T> back — including the retry callback — so you never assemble the union by hand.",
   "states": ["loading", "error"],
   "dependencies": ["react"],

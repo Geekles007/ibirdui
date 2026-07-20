@@ -72,13 +72,14 @@ export function usePoll<T>(
 
     const tick = (isFirst: boolean) => {
       const id = ++runId.current;
-      // Only the first load (with no data yet) shows the spinner; background
-      // polls keep the current data until the new result lands.
-      if (isFirst) {
-        setState((prev) =>
-          prev.status === 'success' || prev.status === 'empty' ? prev : { status: 'loading' },
-        );
-      }
+      // The first load (with no data yet) shows the spinner; every poll after
+      // that keeps the current data on screen, flagged `refreshing` while the
+      // next result is in flight — so the screen refreshes without blinking.
+      setState((prev) => {
+        if (prev.status === 'success') return { ...prev, refreshing: true };
+        if (prev.status === 'empty') return prev;
+        return isFirst ? { status: 'loading' } : prev;
+      });
       fetcherRef.current().then(
         (data) => {
           if (id !== runId.current) return;

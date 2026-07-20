@@ -50,4 +50,36 @@ describe('useAsync', () => {
     expect(result.current.state.status).toBe('idle');
     expect(fetcher).not.toHaveBeenCalled();
   });
+
+  it('keeps data on screen while refetching (stale-while-revalidate)', async () => {
+    let resolveSecond!: (v: number[]) => void;
+    const secondFetch = new Promise<number[]>((r) => {
+      resolveSecond = r;
+    });
+    const fetcher = vi
+      .fn<() => Promise<number[]>>()
+      .mockResolvedValueOnce([1])
+      .mockReturnValueOnce(secondFetch);
+
+    const { result } = renderHook(() => useAsync(fetcher, []));
+    await waitFor(() => expect(result.current.state.status).toBe('success'));
+
+    // Refetch: the old data stays visible, flagged refreshing — no blank skeleton.
+    act(() => result.current.refetch());
+    expect(result.current.state.status).toBe('success');
+    if (result.current.state.status === 'success') {
+      expect(result.current.state.data).toEqual([1]);
+      expect(result.current.state.refreshing).toBe(true);
+    }
+
+    // When the refetch lands, fresh data replaces it and refreshing clears.
+    await act(async () => {
+      resolveSecond([1, 2]);
+    });
+    expect(result.current.state.status).toBe('success');
+    if (result.current.state.status === 'success') {
+      expect(result.current.state.data).toEqual([1, 2]);
+      expect(result.current.state.refreshing).toBeFalsy();
+    }
+  });
 });

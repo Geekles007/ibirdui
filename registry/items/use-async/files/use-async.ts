@@ -32,7 +32,9 @@ function defaultIsEmpty<T>(data: T): boolean {
  *
  * The fetcher re-runs whenever an item in `deps` changes (same contract as
  * `useEffect`). Out-of-order responses are ignored, so a fast retry never gets
- * overwritten by a slow earlier request.
+ * overwritten by a slow earlier request. A refetch keeps the current data on
+ * screen as `success` with `refreshing: true` — stale-while-revalidate — rather
+ * than blanking to a skeleton.
  */
 export function useAsync<T>(
   fetcher: () => Promise<T>,
@@ -53,7 +55,15 @@ export function useAsync<T>(
   useEffect(() => {
     if (!enabled) return;
     const id = ++runId.current;
-    setState({ status: 'loading' });
+
+    // Stale-while-revalidate: a refetch keeps the current data on screen (flagged
+    // `refreshing`) instead of flashing a skeleton over content that's already
+    // there. Only a first load — or a retry after an error — shows `loading`.
+    setState((prev) => {
+      if (prev.status === 'success') return { ...prev, refreshing: true };
+      if (prev.status === 'empty') return prev;
+      return { status: 'loading' };
+    });
 
     fetcher().then(
       (data) => {
