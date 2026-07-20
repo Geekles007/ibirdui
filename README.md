@@ -48,9 +48,11 @@ data-list 1.0.0 → 1.1.0
 - Every UI item ships an **axe test** (`a11y.tested: true`) and documents its
   guarantees: live-region announcements, `aria-busy`, focus management, roles.
 - Every item carries a machine-readable **manifest** (`intents`, `examples`),
-  aggregated into `r/manifest.json`. `ibirdui gen "<prompt>"` matches it to suggest
-  the right components — the seam where a model (e.g. `@geekles/llm_sdk`) plugs in
-  to generate UI from real components instead of hallucinating markup.
+  aggregated into `r/manifest.json`. `ibirdui gen "<prompt>"` keyword-ranks it to
+  suggest the right components (deterministic, no model). The AI-native payoff is
+  the **MCP server** (`ibirdui-mcp`): it hands an assistant the _real_ source of
+  each component to compose with — instead of hallucinating markup. The manifest
+  is the seam where a model can plug in for smarter ranking or generation.
 
 Styling is **Tailwind CSS** (semantic tokens: `muted`, `destructive`, …).
 
