@@ -1,5 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { type AsyncState, error, fromResult, loading, success } from './index.js';
+import {
+  type AsyncState,
+  asyncStateNameSchema,
+  error,
+  fromResult,
+  loading,
+  success,
+} from './index.js';
 
 describe('async state constructors', () => {
   it('builds discriminated states', () => {
@@ -37,5 +44,17 @@ describe('fromResult', () => {
   it('honours a custom isEmpty predicate', () => {
     const state = fromResult({ rows: [] }, { isEmpty: (d) => d.rows.length === 0 });
     expect(state.status).toBe('empty');
+  });
+});
+
+describe('asyncStateNameSchema', () => {
+  it('covers the runtime AsyncStatus values plus optimistic', () => {
+    for (const state of ['idle', 'loading', 'empty', 'error', 'success', 'optimistic']) {
+      expect(asyncStateNameSchema.safeParse(state).success).toBe(true);
+    }
+  });
+
+  it('drops the retired "offline" tag', () => {
+    expect(asyncStateNameSchema.safeParse('offline').success).toBe(false);
   });
 });

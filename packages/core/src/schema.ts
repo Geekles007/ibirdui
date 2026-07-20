@@ -1,7 +1,13 @@
 import { z } from 'zod';
+import { ASYNC_STATUSES } from './state.js';
 
-/** The five real-world async states a ibirdui component is expected to handle. */
-export const asyncStateNameSchema = z.enum(['loading', 'empty', 'error', 'optimistic', 'offline']);
+/**
+ * The async-state capabilities an item advertises handling out of the box. A
+ * superset of the runtime {@link AsyncStatus} union — single-sourced from
+ * `ASYNC_STATUSES` so the two can't drift — plus non-status UI capabilities like
+ * `optimistic` updates. Emitted into the index/manifest the CLI and MCP read.
+ */
+export const asyncStateNameSchema = z.enum([...ASYNC_STATUSES, 'optimistic'] as const);
 
 export type AsyncStateName = z.infer<typeof asyncStateNameSchema>;
 
