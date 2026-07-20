@@ -2,6 +2,7 @@ import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import {
   type RegistryIndex,
   type RegistryItem,
+  asyncStateNameSchema,
   fetchRegistryIndex,
   fetchRegistryItem,
 } from 'ibirdui-core';
@@ -77,10 +78,17 @@ function formatItem(item: RegistryItem): string {
 export function createServer(): McpServer {
   const baseUrl = resolveRegistry();
 
-  // The catalog rarely changes within a session; fetch it once and reuse.
+  // The catalog rarely changes within a session; fetch it once and reuse — but
+  // never memoize a rejection, or a single transient network blip would leave
+  // `list`/`search` permanently broken for the rest of the session.
   let indexCache: Promise<RegistryIndex> | undefined;
   const getIndex = () => {
-    indexCache ??= fetchRegistryIndex(baseUrl, { fetch: nodeFetch });
+    if (!indexCache) {
+      indexCache = fetchRegistryIndex(baseUrl, { fetch: nodeFetch }).catch((error) => {
+        indexCache = undefined; // let the next call retry
+        throw error;
+      });
+    }
     return indexCache;
   };
 
@@ -93,18 +101,22 @@ export function createServer(): McpServer {
       description:
         'List every component available in the ibirdui registry, with what each is for and the async states it handles. Optionally filter to components that handle a given state.',
       inputSchema: {
-        state: z
-          .enum(['loading', 'empty', 'error', 'optimistic', 'offline'])
+        state: asyncStateNameSchema
           .optional()
           .describe('Only return components that handle this async state.'),
       },
     },
     async ({ state }) => {
-      const index = await getIndex();
-      const items = state ? index.items.filter((i) => i.states.includes(state)) : index.items;
-      if (items.length === 0) return text(`No components handle the "${state}" state.`);
-      const header = `${items.length} ibirdui component(s)${state ? ` handling "${state}"` : ''}:\n`;
-      return text(`${header}\n${items.map(formatEntry).join('\n\n')}`);
+      try {
+        const index = await getIndex();
+        const items = state ? index.items.filter((i) => i.states.includes(state)) : index.items;
+        if (items.length === 0) return text(`No components handle the "${state}" state.`);
+        const header = `${items.length} ibirdui component(s)${state ? ` handling "${state}"` : ''}:\n`;
+        return text(`${header}\n${items.map(formatEntry).join('\n\n')}`);
+      } catch (error) {
+        const reason = error instanceof Error ? error.message : String(error);
+        return text(`Couldn't load the ibirdui catalog: ${reason}`, true);
+      }
     },
   );
 
@@ -120,15 +132,20 @@ export function createServer(): McpServer {
       },
     },
     async ({ query, limit }) => {
-      const index = await getIndex();
-      const ranked = rankEntries(index.items, query, limit ?? 8);
-      if (ranked.length === 0) {
-        return text(
-          `No ibirdui component matched "${query}". Try \`list_components\` to see the full catalog.`,
-        );
+      try {
+        const index = await getIndex();
+        const ranked = rankEntries(index.items, query, limit ?? 8);
+        if (ranked.length === 0) {
+          return text(
+            `No ibirdui component matched "${query}". Try \`list_components\` to see the full catalog.`,
+          );
+        }
+        const body = ranked.map(({ entry }) => formatEntry(entry)).join('\n\n');
+        return text(`Top ${ranked.length} match(es) for "${query}":\n\n${body}`);
+      } catch (error) {
+        const reason = error instanceof Error ? error.message : String(error);
+        return text(`Couldn't search the ibirdui catalog: ${reason}`, true);
       }
-      const body = ranked.map(({ entry }) => formatEntry(entry)).join('\n\n');
-      return text(`Top ${ranked.length} match(es) for "${query}":\n\n${body}`);
     },
   );
 
