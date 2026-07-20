@@ -6,7 +6,15 @@
  * ibirdui components "state-complete": the five real-world states of any async UI
  * are modelled once, here, instead of being re-implemented per component.
  */
-export type AsyncStatus = 'idle' | 'loading' | 'empty' | 'error' | 'success';
+/**
+ * The runtime states a component can be in. Kept as a runtime tuple so it's the
+ * single source of truth for both the {@link AsyncStatus} union below and the
+ * registry's `states` capability vocabulary (`asyncStateNameSchema`) — the two
+ * used to be hand-maintained parallel lists and had drifted apart.
+ */
+export const ASYNC_STATUSES = ['idle', 'loading', 'empty', 'error', 'success'] as const;
+
+export type AsyncStatus = (typeof ASYNC_STATUSES)[number];
 
 export type AsyncState<T> =
   | { status: 'idle' }
