@@ -21,7 +21,10 @@ export type AsyncState<T> =
   | { status: 'loading' }
   | { status: 'empty' }
   | { status: 'error'; error: Error; retry?: () => void }
-  | { status: 'success'; data: T };
+  // `refreshing` marks stale-while-revalidate: the data is on screen but a
+  // background refetch is in flight, so a consumer can show a subtle indicator
+  // (or `aria-busy`) without blanking to `loading`.
+  | { status: 'success'; data: T; refreshing?: boolean };
 
 export const idle = (): AsyncState<never> => ({ status: 'idle' });
 export const loading = (): AsyncState<never> => ({ status: 'loading' });

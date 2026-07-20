@@ -71,4 +71,18 @@ describe('StateBoundary accessibility', () => {
     // A caller with its own live region (e.g. data-table) can silence this one.
     expect(screen.getByRole('status')).toBeEmptyDOMElement();
   });
+
+  it('sets aria-busy while showing stale data during a refresh', () => {
+    const { container, rerender } = render(
+      <StateBoundary state={success(['x'])}>{(d) => <p>{d.join('')}</p>}</StateBoundary>,
+    );
+    expect(container.querySelector('[aria-busy="true"]')).toBeNull();
+
+    rerender(
+      <StateBoundary state={{ status: 'success', data: ['x'], refreshing: true }}>
+        {(d) => <p>{d.join('')}</p>}
+      </StateBoundary>,
+    );
+    expect(container.querySelector('[aria-busy="true"]')).not.toBeNull();
+  });
 });

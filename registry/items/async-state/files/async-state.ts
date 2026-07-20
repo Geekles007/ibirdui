@@ -23,7 +23,11 @@ export type AsyncState<T> =
   | { status: 'loading' }
   | { status: 'empty' }
   | { status: 'error'; error: Error; retry?: () => void }
-  | { status: 'success'; data: T };
+  // `refreshing` is stale-while-revalidate: the data is on screen while a
+  // background refetch runs, so a consumer can show a subtle indicator (or
+  // `aria-busy`) instead of blanking back to `loading`. Optional, so plain
+  // `success(data)` and every existing consumer keep working unchanged.
+  | { status: 'success'; data: T; refreshing?: boolean };
 
 // --- Constructors -----------------------------------------------------------
 // Tiny helpers so callers write `success(data)` instead of the full object
@@ -51,8 +55,9 @@ export const isEmpty = <T>(s: AsyncState<T>): s is { status: 'empty' } => s.stat
 export const isError = <T>(
   s: AsyncState<T>,
 ): s is { status: 'error'; error: Error; retry?: () => void } => s.status === 'error';
-export const isSuccess = <T>(s: AsyncState<T>): s is { status: 'success'; data: T } =>
-  s.status === 'success';
+export const isSuccess = <T>(
+  s: AsyncState<T>,
+): s is { status: 'success'; data: T; refreshing?: boolean } => s.status === 'success';
 
 // --- match ------------------------------------------------------------------
 

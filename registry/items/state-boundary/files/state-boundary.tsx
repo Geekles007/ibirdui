@@ -79,7 +79,10 @@ export function StateBoundary<T>({
   return (
     <div
       className={cn('ibirdui-state-boundary', className)}
-      aria-busy={state.status === 'loading' || undefined}
+      // Busy while loading, and while showing stale data during a background refresh.
+      aria-busy={
+        state.status === 'loading' || (state.status === 'success' && state.refreshing) || undefined
+      }
     >
       {/* Polite live region: announced, not seen. */}
       <span role="status" aria-live="polite" className="sr-only">
