@@ -1644,9 +1644,9 @@ export default function Home() {
             <button
               type="button"
               onClick={runAi}
-              className="hov-dim"
+              className="hov-dim border-none"
               style={s(
-                'display:inline-flex;align-items:center;gap:8px;padding:0 17px;border-radius:11px;background:var(--primary);color:var(--primary-foreground);font-weight:600;font-size:14px;cursor:pointer;flex:none',
+                'display:inline-flex;align-items:center;gap:8px;padding:0 17px;border-radius:11px;background:var(--primary);color:var(--primary-foreground);font-weight:600;font-size:14px;cursor:pointer;flex:none;border:none;',
               )}
             >
               <span style={s(`font-family:${mono}`)}>gen</span>
