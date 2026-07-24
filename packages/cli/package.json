@@ -1,6 +1,6 @@
 {
   "name": "ibirdui",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "The ibirdui CLI — add, upgrade and gen state-complete, accessible components into your project.",
   "license": "MIT",
   "author": "Geekles007",

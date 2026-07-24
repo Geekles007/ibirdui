@@ -1,6 +1,6 @@
 {
   "name": "ibirdui-core",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Headless contract (AsyncState), content hashing, and registry schema/helpers for ibirdui.",
   "license": "MIT",
   "author": "Geekles007",

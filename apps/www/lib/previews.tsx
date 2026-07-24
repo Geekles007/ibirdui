@@ -432,7 +432,10 @@ function StateBoundaryStates() {
   const states: Array<[string, () => void]> = [
     ['Loading', () => setState({ status: 'loading' })],
     ['Empty', () => setState({ status: 'empty' })],
-    ['Error', () => setState({ status: 'error', error: new Error('Could not load team'), retry: load })],
+    [
+      'Error',
+      () => setState({ status: 'error', error: new Error('Could not load team'), retry: load }),
+    ],
     ['Success', () => setState({ status: 'success', data: TEAM })],
   ];
 
@@ -642,7 +645,11 @@ function ToastTypes() {
     <PortalStage label="app.ibird.ui" height={280}>
       <Toaster position="bottom-right" />
       <div className="grid grid-cols-2 gap-2">
-        <button type="button" className={ctrlBtn} onClick={() => toast.success('Copied to clipboard')}>
+        <button
+          type="button"
+          className={ctrlBtn}
+          onClick={() => toast.success('Copied to clipboard')}
+        >
           Success
         </button>
         <button type="button" className={ctrlBtn} onClick={() => toast.error('Upload failed')}>
